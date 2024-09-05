@@ -20,6 +20,6 @@ public sealed class DatabaseContext : DbContext {
             Address = "Address bb", Region = "Village Region 1", PhoneNumber = "+387 60 111 2222", MembershipDate = new DateOnly(2023, 09, 04)
         });
         modelBuilder.Entity<Auth>().HasData(new Auth { Id = 1, Email = "admin@gmail.com", Password = "$2a$11$llwetYA6KMfLAjuEss9.fOxrLxq9BLJEpcZXVuI4y0.IK4iUnTLNa", RoleId = 1, UserId = 1 });
-        }
+    }
 }
 
