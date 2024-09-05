@@ -5,6 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using localhub_be.Services.Interfaces;
+using localhub_be.Services.Implementations;
+using Microsoft.AspNetCore.Diagnostics;
+using System.Net;
+using localhub_be.Models.DTOs;
+using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -77,12 +84,44 @@ builder.Services.AddSwaggerGen(c => {
     });
 });
 
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.Configure<ApiBehaviorOptions>(options => {
+    options.SuppressModelStateInvalidFilter = true;
+});
+
+// The configuration `SuppressModelStateInvalidFilter = true` disables the automatic inclusion of `ModelState`
+// errors in the response, such as a `400 Bad Request` for invalid models. Instead, you need to manually handle errors
+// in the controller by checking `ModelState.IsValid` and returning an appropriate response.
+// That is default case.
+// When the model is not valid, the error is caught on line 108 in this file and returned to the user as a MessageOut object.
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Global exception handler
+app.UseExceptionHandler(options => {
+    options.Run(async context => {
+        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+        context.Response.ContentType = "application/json";
+
+        var exception = context.Features.Get<IExceptionHandlerFeature>();
+
+        if (exception != null) {
+            var responses = exception.Error.Message.Split(";", StringSplitOptions.RemoveEmptyEntries);
+
+            var errorResponse = responses.Select(response => new MessageOut(response)).ToList();
+            var jsonResponse = JsonSerializer.Serialize(errorResponse);
+
+            await context.Response.WriteAsync(jsonResponse).ConfigureAwait(false);
+        }
+    });
+});
 
 app.UseCors();
 

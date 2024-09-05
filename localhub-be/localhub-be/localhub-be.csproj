@@ -21,13 +21,4 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Core\Exceptions\" />
-    <Folder Include="Models\DTOs\" />
-    <Folder Include="Models\DAOs\" />
-    <Folder Include="Services\Interfaces\" />
-    <Folder Include="Services\Implementations\" />
-  </ItemGroup>
-
 </Project>
