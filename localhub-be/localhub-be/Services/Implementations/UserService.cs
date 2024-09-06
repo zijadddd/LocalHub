@@ -15,7 +15,7 @@ public sealed class UserService : IUserService {
 
     public async Task<string> ChangePassword(int id, ChangeUserPasswordIn request) {
         User user = await _databaseContext.Users.Include(user => user.Auth).FirstOrDefaultAsync(user => user.Id == id);
-        if (user == null) throw new UserNotFoundException(id);
+        if (user is null) throw new UserNotFoundException(id);
         if (!user.Auth.Password.Equals(request.OldPassword)) throw new PasswordsDoNotMatchException();
         if (user.Auth.Password.Equals(request.NewPassword)) throw new PasswordReuseException();
 
@@ -33,7 +33,7 @@ public sealed class UserService : IUserService {
 
     public async Task<string> Delete(int id) {
         User user = await _databaseContext.Users.Include(user => user.Auth).FirstOrDefaultAsync(user => user.Id == id);
-        if (user == null) throw new UserNotFoundException(id);
+        if (user is null) throw new UserNotFoundException(id);
 
         _databaseContext.Remove(user);
         await _databaseContext.SaveChangesAsync();
