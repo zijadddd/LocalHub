@@ -1,4 +1,4 @@
-﻿using localhub_be.Core.Validations;
+﻿using localhub_be.Core.Validators;
 using System.ComponentModel.DataAnnotations;
 
 namespace localhub_be.Models.DTOs;

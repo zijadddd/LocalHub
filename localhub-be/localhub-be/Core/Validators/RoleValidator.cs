@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace localhub_be.Core.Validations;
+namespace localhub_be.Core.Validators;
 public class RoleValidator {
     public static ValidationResult ValidateRole(string role, ValidationContext validationContext) {
         if (!role.Equals("User") || !role.Equals("Administrator")) {
