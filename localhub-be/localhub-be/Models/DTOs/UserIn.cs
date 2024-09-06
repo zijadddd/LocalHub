@@ -51,7 +51,7 @@ public sealed record UserIn {
     [CustomValidation(typeof(RoleValidator), nameof(RoleValidator.ValidateRole))]
     public string? Role { get; init; }
 
-    public UserIn(string? firstName, string? lastName, DateOnly birthDate, string? address, string? region, string? phoneNumber, DateOnly membershipDate, string? email, string? password) {
+    public UserIn(string? firstName, string? lastName, DateOnly birthDate, string? address, string? region, string? phoneNumber, DateOnly membershipDate, string? email, string? password, string? role) {
         FirstName = firstName;
         LastName = lastName;
         BirthDate = birthDate;
@@ -61,5 +61,6 @@ public sealed record UserIn {
         MembershipDate = membershipDate;
         Email = email;
         Password = password;
+        Role = role;
     }
 }
