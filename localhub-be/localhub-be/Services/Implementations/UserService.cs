@@ -27,8 +27,62 @@ public sealed class UserService : IUserService {
         return $"Password for the user with ID {id} was successfully changed.";
     }
 
-    public Task<UserOut> Create(UserIn request) {
-        throw new NotImplementedException();
+    public async Task<UserOut> Create(UserIn request) {
+        DateOnly minDate = new DateOnly(1900, 01, 01);
+        DateOnly maxDate = DateOnly.FromDateTime(DateTime.Today);
+
+        if (!(request.BirthDate >= minDate && request.BirthDate <= maxDate)) 
+            throw new InvalidDateException("birth date");
+
+        if (!(request.MembershipDate >= minDate && request.MembershipDate <= maxDate)) 
+            throw new InvalidDateException("membership date");
+
+        User user = await _databaseContext.Users.Include(user => user.Auth).FirstOrDefaultAsync(user => user.Auth.Email == request.Email);
+
+        if (user != null)
+            throw new UserWithEmailAlreadyExistException(request.Email);
+
+        Role role = await _databaseContext.Roles.FirstOrDefaultAsync(role => role.Name.Equals(role));
+
+        if (role is null) throw new RoleDoesNotExistException(request.Role);
+
+        user = new User {
+            FirstName = request.FirstName,
+            LastName = request.LastName,
+            BirthDate = request.BirthDate,
+            Address = request.Address,
+            Region = request.Region,
+            PhoneNumber = request.PhoneNumber,
+            MembershipDate = request.MembershipDate,    
+        };
+
+        await _databaseContext.Users.AddAsync(user);
+
+        Auth authInfo = new Auth {
+            Email = request.Email,
+            Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
+            User = user,
+            Role = role
+        };
+
+        await _databaseContext.Auths.AddAsync(authInfo);
+        await _databaseContext.SaveChangesAsync();
+
+        UserOut response = new UserOut(
+            user.Id,
+            user.FirstName,
+            user.LastName,
+            user.BirthDate,
+            user.Address,
+            user.Region,
+            user.PhoneNumber,
+            user.MembershipDate,
+            user.Created,
+            user.Updated,
+            user.Auth.Email
+        );
+
+        return response;
     }
 
     public async Task<string> Delete(int id) {
@@ -43,7 +97,7 @@ public sealed class UserService : IUserService {
 
     public async Task<UserOut> Get(int id) {
         User user = await _databaseContext.Users.Include(user => user.Auth).FirstOrDefaultAsync(user => user.Id == id);
-        if (user == null) throw new UserNotFoundException(id);
+        if (user is null) throw new UserNotFoundException(id);
 
         UserOut response = new UserOut(
             user.Id, 
