@@ -24,7 +24,7 @@ public sealed class UserService : IUserService {
         _databaseContext.Users.Update(user);
         await _databaseContext.SaveChangesAsync();
 
-        return $"Password for the user with ID {id} was successfully changed.";
+        return $"Password for the user with id {id} was successfully changed.";
     }
 
     public async Task<UserOut> Create(UserIn request) {
