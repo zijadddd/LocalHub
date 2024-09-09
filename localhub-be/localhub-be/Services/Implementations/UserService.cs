@@ -4,6 +4,7 @@ using localhub_be.Models.DAOs;
 using localhub_be.Models.DTOs;
 using localhub_be.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace localhub_be.Services.Implementations;
 public sealed class UserService : IUserService {
@@ -13,47 +14,34 @@ public sealed class UserService : IUserService {
         _databaseContext = databaseContext;
     }
 
-    public async Task<string> ChangePassword(int id, ChangeUserPasswordIn request) {
-        User user = await _databaseContext.Users.Include(user => user.Auth).FirstOrDefaultAsync(user => user.Id == id);
-        if (user is null) throw new UserNotFoundException(id);
-        if (!user.Auth.Password.Equals(request.OldPassword)) throw new PasswordsDoNotMatchException();
-        if (user.Auth.Password.Equals(request.NewPassword)) throw new PasswordReuseException();
-
-        user.Auth.Password = request.NewPassword;
-
-        _databaseContext.Users.Update(user);
-        await _databaseContext.SaveChangesAsync();
-
-        return $"Password for the user with id {id} was successfully changed.";
-    }
-
     public async Task<UserOut> Create(UserIn request) {
-        DateOnly minDate = new DateOnly(1900, 01, 01);
-        DateOnly maxDate = DateOnly.FromDateTime(DateTime.Today);
+        DateTime minDate = new DateTime(1900, 01, 01);
+        DateTime maxDate = DateTime.Today;
 
-        if (!(request.BirthDate >= minDate && request.BirthDate <= maxDate)) 
+        if (!(DateTime.Parse(request.BirthDate) >= minDate && DateTime.Parse(request.BirthDate) <= maxDate))
             throw new InvalidDateException("birth date");
 
-        if (!(request.MembershipDate >= minDate && request.MembershipDate <= maxDate)) 
+        if (!(DateTime.Parse(request.MembershipDate) >= minDate && DateTime.Parse(request.MembershipDate) <= maxDate))
             throw new InvalidDateException("membership date");
 
-        User user = await _databaseContext.Users.Include(user => user.Auth).FirstOrDefaultAsync(user => user.Auth.Email == request.Email);
 
-        if (user != null)
+        Auth auth = await _databaseContext.Auths.FirstOrDefaultAsync(auth => auth.Email.Equals(request.Email));
+
+        if (auth is not null)
             throw new UserWithEmailAlreadyExistException(request.Email);
 
-        Role role = await _databaseContext.Roles.FirstOrDefaultAsync(role => role.Name.Equals(role));
+        Role role = await _databaseContext.Roles.FirstOrDefaultAsync(role => role.Name.Equals(request.Role));
 
         if (role is null) throw new RoleDoesNotExistException(request.Role);
 
-        user = new User {
+        User user = new User {
             FirstName = request.FirstName,
             LastName = request.LastName,
-            BirthDate = request.BirthDate,
+            BirthDate = DateTime.Parse(request.BirthDate),
             Address = request.Address,
             Region = request.Region,
             PhoneNumber = request.PhoneNumber,
-            MembershipDate = request.MembershipDate,    
+            MembershipDate = DateTime.Parse(request.MembershipDate),    
         };
 
         await _databaseContext.Users.AddAsync(user);
@@ -137,7 +125,65 @@ public sealed class UserService : IUserService {
         return response;
     }
 
-    public Task<UserOut> Update(UserIn request) {
-        throw new NotImplementedException();
+    public async Task<string> ChangePassword(int id, ChangeUserPasswordIn request) {
+        Auth auth = await _databaseContext.Auths.FirstOrDefaultAsync(auth => auth.UserId == id);
+
+        if (auth is null) throw new UserAuthInfoNotFoundException(id);
+        if (!auth.Password.Equals(request.OldPassword)) throw new PasswordsDoNotMatchException();
+        if (auth.Password.Equals(request.NewPassword)) throw new PasswordReuseException();
+
+        auth.Password = request.NewPassword;
+        auth.Updated = DateTime.Now;
+
+        _databaseContext.Auths.Update(auth);
+        await _databaseContext.SaveChangesAsync();
+
+        return $"Password for the user with id {id} was successfully changed.";
+    }
+
+    public async Task<string> ChangePhoneNumber(int id, ChangeUserPhoneNumberIn request) {
+        User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id == id);
+        if (user is null) throw new UserNotFoundException(id);
+
+        user.PhoneNumber = request.PhoneNumber;
+        user.Updated = DateTime.Now;
+
+        _databaseContext.Users.Update(user);
+        await _databaseContext.SaveChangesAsync();
+
+        return $"Phone number for the user with id {id} was successfully changed.";
+    }
+
+    public async Task<string> ChangeAddressAndRegion(int id, ChangeUserAddressAndRegionIn request) {
+        User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id == id);
+        if (user is null) throw new UserNotFoundException(id);
+
+        user.Address = request.Address;
+        user.Region = request.Region;
+        user.Updated = DateTime.Now;
+
+        _databaseContext.Users.Update(user);
+        await _databaseContext.SaveChangesAsync();
+
+        if (!request.Address.IsNullOrEmpty() && request.Region.IsNullOrEmpty()) 
+            return $"Address for the user with id {id} was successfully changed.";
+
+        if (request.Address.IsNullOrEmpty() && !request.Region.IsNullOrEmpty()) 
+            return $"Region for the user with id {id} was successfully changed.";
+
+        return $"Address and region for the user with id {id} was successfully changed.";
+    }
+
+    public async Task<string> ChangeEmail(int id, ChangeUserEmailIn request) {
+        Auth auth = await _databaseContext.Auths.FirstOrDefaultAsync(auth => auth.UserId == id);
+        if (auth is null) throw new UserAuthInfoNotFoundException(id);
+
+        auth.Email = request.Email;
+        auth.Updated = DateTime.Now;
+
+        _databaseContext.Auths.Update(auth);
+        await _databaseContext.SaveChangesAsync();
+
+        return $"Email for the user with id {id} was successfully changed.";
     }
 }

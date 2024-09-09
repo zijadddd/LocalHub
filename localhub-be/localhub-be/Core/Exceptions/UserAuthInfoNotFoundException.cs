@@ -7,4 +7,9 @@ public sealed class UserAuthInfoNotFoundException : Exception {
         : base($"User with email {email} not found.") {
         StatusCode = statusCode;
     }
+
+    public UserAuthInfoNotFoundException(int id, HttpStatusCode statusCode = HttpStatusCode.NotFound)
+    : base($"User auth info with user id {id} not found.") {
+        StatusCode = statusCode;
+    }
 }

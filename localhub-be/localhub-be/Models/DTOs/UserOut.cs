@@ -3,16 +3,16 @@ public sealed record UserOut {
     public int Id { get; set; }
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
-    public DateOnly BirthDate { get; set; }
+    public DateTime BirthDate { get; set; }
     public string? Address { get; set; }
     public string? Region { get; set; }
     public string? PhoneNumber { get; set; }
-    public DateOnly MembershipDate { get; set; }
+    public DateTime MembershipDate { get; set; }
     public DateTime Created { get; set; } = DateTime.Now;
     public DateTime Updated { get; set; }
     public string? Email { get; set; }
 
-    public UserOut(int id, string? firstName, string? lastName, DateOnly birthDate, string? address, string? region, string? phoneNumber, DateOnly membershipDate, DateTime created, DateTime updated, string? email) {
+    public UserOut(int id, string? firstName, string? lastName, DateTime birthDate, string? address, string? region, string? phoneNumber, DateTime membershipDate, DateTime created, DateTime updated, string? email) {
         Id = id;
         FirstName = firstName;
         LastName = lastName;

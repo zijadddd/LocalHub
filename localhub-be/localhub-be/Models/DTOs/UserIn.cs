@@ -5,18 +5,18 @@ namespace localhub_be.Models.DTOs;
 public sealed record UserIn {
 
     [Required]
-    [RegularExpression(@"^[A-Z][a-z]*$", ErrorMessage = "Invalid first name. Valid: John")]
+    [RegularExpression(@"^[A-Z][a-z]*$", ErrorMessage = "Invalid first name. Valid: John.")]
     [StringLength(32, MinimumLength = 2, ErrorMessage = "Invalid first name. First name should be at least 2 characters long.")]
     public string? FirstName { get; init; }
 
     [Required]
-    [RegularExpression(@"^[A-Z][a-z]*$", ErrorMessage = "Invalid last name. Valid: Smith")]
+    [RegularExpression(@"^[A-Z][a-z]*$", ErrorMessage = "Invalid last name. Valid: Smith.")]
     [StringLength(32, MinimumLength = 2, ErrorMessage = "Invalid last name. Last name should be at least 2 characters long.")]
     public string? LastName { get; init; }
 
     [Required]
     [RegularExpression(@"^\d{4}-\d{2}-\d{2}$", ErrorMessage = "Invalid birth date. Valid: 2023-10-17.")]
-    public DateOnly BirthDate { get; init; }
+    public string BirthDate { get; init; }
 
     [Required]
     [RegularExpression(@"^([A-Z][a-z]+(\s[A-Z][a-z]+)*\s)?\d+$", ErrorMessage = "Invalid address. Valid: Address bb.")]
@@ -34,7 +34,7 @@ public sealed record UserIn {
 
     [Required]
     [RegularExpression(@"^\d{4}-\d{2}-\d{2}$", ErrorMessage = "Invalid membership date. Valid: 2023-10-17.")]
-    public DateOnly MembershipDate { get; init; }
+    public string MembershipDate { get; init; }
 
     [Required]
     [EmailAddress]
@@ -47,11 +47,11 @@ public sealed record UserIn {
     public string? Password { get; init; }
 
     [Required]
-    [StringLength(12, MinimumLength = 4, ErrorMessage = "Invalid role name. The role name should be between 4 and 12 characters long.")]
+    [StringLength(13, MinimumLength = 4, ErrorMessage = "Invalid role name. The role name should be between 4 and 12 characters long.")]
     [CustomValidation(typeof(RoleValidator), nameof(RoleValidator.ValidateRole))]
     public string? Role { get; init; }
 
-    public UserIn(string? firstName, string? lastName, DateOnly birthDate, string? address, string? region, string? phoneNumber, DateOnly membershipDate, string? email, string? password, string? role) {
+    public UserIn(string? firstName, string? lastName, string birthDate, string? address, string? region, string? phoneNumber, string membershipDate, string? email, string? password, string? role) {
         FirstName = firstName;
         LastName = lastName;
         BirthDate = birthDate;

@@ -36,14 +36,6 @@ public sealed class UserController : BaseController {
         return Ok(response);
     }
 
-    [HttpPut, Authorize(Roles = "Administrator")]
-    public async Task<ActionResult<UserOut>> UpdateUser(UserIn request) {
-        ValidateModelState();
-        UserOut response = await _userService.Update(request);
-
-        return Ok(response);
-    }
-
     [HttpDelete, Authorize(Roles = "Administrator")]
     public async Task<ActionResult<string>> DeleteUser(int id) {
         string response = await _userService.Delete(id);
@@ -51,10 +43,34 @@ public sealed class UserController : BaseController {
         return Ok(response);
     }
 
-    [HttpPost("{id}"), Authorize(Roles = "User, Administrator")]
+    [HttpPut("{id}/updatePassword"), Authorize(Roles = "User, Administrator")]
     public async Task<ActionResult<string>> ChangeUserPassword(int id, ChangeUserPasswordIn request) {
         ValidateModelState();
         string response = await _userService.ChangePassword(id, request);
+
+        return Ok(response);
+    }
+
+    [HttpPut("{id}/updateEmail"), Authorize(Roles = "Administrator")]
+    public async Task<ActionResult<UserOut>> UpdateEmail(int id, ChangeUserEmailIn request) {
+        ValidateModelState();
+        String response = await _userService.ChangeEmail(id, request);
+
+        return Ok(response);
+    }
+
+    [HttpPut("{id}/updatePhoneNumber"), Authorize(Roles = "Administrator")]
+    public async Task<ActionResult<UserOut>> UpdatePhoneNumber(int id, ChangeUserPhoneNumberIn request) {
+        ValidateModelState();
+        String response = await _userService.ChangePhoneNumber(id, request);
+
+        return Ok(response);
+    }
+
+    [HttpPut("{id}/updateAddressAndRegion"), Authorize(Roles = "Administrator")]
+    public async Task<ActionResult<UserOut>> UpdateUserAddressAndRegion(int id, ChangeUserAddressAndRegionIn request) {
+        ValidateModelState();
+        String response = await _userService.ChangeAddressAndRegion(id, request);
 
         return Ok(response);
     }
