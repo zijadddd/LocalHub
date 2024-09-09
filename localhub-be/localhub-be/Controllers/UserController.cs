@@ -37,40 +37,40 @@ public sealed class UserController : BaseController {
     }
 
     [HttpDelete, Authorize(Roles = "Administrator")]
-    public async Task<ActionResult<string>> DeleteUser(int id) {
-        string response = await _userService.Delete(id);
+    public async Task<ActionResult<MessageOut>> DeleteUser(int id) {
+        MessageOut response = await _userService.Delete(id);
 
         return Ok(response);
     }
 
     [HttpPut("{id}/updatePassword"), Authorize(Roles = "User, Administrator")]
-    public async Task<ActionResult<string>> ChangeUserPassword(int id, ChangeUserPasswordIn request) {
+    public async Task<ActionResult<MessageOut>> ChangeUserPassword(int id, ChangeUserPasswordIn request) {
         ValidateModelState();
-        string response = await _userService.ChangePassword(id, request);
+        MessageOut response = await _userService.ChangePassword(id, request);
 
         return Ok(response);
     }
 
     [HttpPut("{id}/updateEmail"), Authorize(Roles = "Administrator")]
-    public async Task<ActionResult<UserOut>> UpdateEmail(int id, ChangeUserEmailIn request) {
+    public async Task<ActionResult<MessageOut>> UpdateEmail(int id, ChangeUserEmailIn request) {
         ValidateModelState();
-        String response = await _userService.ChangeEmail(id, request);
+        MessageOut response = await _userService.ChangeEmail(id, request);
 
         return Ok(response);
     }
 
     [HttpPut("{id}/updatePhoneNumber"), Authorize(Roles = "Administrator")]
-    public async Task<ActionResult<UserOut>> UpdatePhoneNumber(int id, ChangeUserPhoneNumberIn request) {
+    public async Task<ActionResult<MessageOut>> UpdatePhoneNumber(int id, ChangeUserPhoneNumberIn request) {
         ValidateModelState();
-        String response = await _userService.ChangePhoneNumber(id, request);
+        MessageOut response = await _userService.ChangePhoneNumber(id, request);
 
         return Ok(response);
     }
 
     [HttpPut("{id}/updateAddressAndRegion"), Authorize(Roles = "Administrator")]
-    public async Task<ActionResult<UserOut>> UpdateUserAddressAndRegion(int id, ChangeUserAddressAndRegionIn request) {
+    public async Task<ActionResult<MessageOut>> UpdateUserAddressAndRegion(int id, ChangeUserAddressAndRegionIn request) {
         ValidateModelState();
-        String response = await _userService.ChangeAddressAndRegion(id, request);
+        MessageOut response = await _userService.ChangeAddressAndRegion(id, request);
 
         return Ok(response);
     }

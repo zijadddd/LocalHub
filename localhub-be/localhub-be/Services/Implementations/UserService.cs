@@ -73,14 +73,14 @@ public sealed class UserService : IUserService {
         return response;
     }
 
-    public async Task<string> Delete(int id) {
+    public async Task<MessageOut> Delete(int id) {
         User user = await _databaseContext.Users.Include(user => user.Auth).FirstOrDefaultAsync(user => user.Id == id);
         if (user is null) throw new UserNotFoundException(id);
 
         _databaseContext.Remove(user);
         await _databaseContext.SaveChangesAsync();
 
-        return $"User with id {id} was successfully deleted.";
+        return new MessageOut($"User with id {id} was successfully deleted.");
     }
 
     public async Task<UserOut> Get(int id) {
@@ -125,25 +125,38 @@ public sealed class UserService : IUserService {
         return response;
     }
 
-    public async Task<string> ChangePassword(int id, ChangeUserPasswordIn request) {
+    public async Task<MessageOut> ChangePassword(int id, ChangeUserPasswordIn request) {
         Auth auth = await _databaseContext.Auths.FirstOrDefaultAsync(auth => auth.UserId == id);
 
         if (auth is null) throw new UserAuthInfoNotFoundException(id);
-        if (!auth.Password.Equals(request.OldPassword)) throw new PasswordsDoNotMatchException();
-        if (auth.Password.Equals(request.NewPassword)) throw new PasswordReuseException();
 
-        auth.Password = request.NewPassword;
+        if (!BCrypt.Net.BCrypt.Verify(request.OldPassword, auth.Password))
+            throw new PasswordsDoNotMatchException();
+
+        if (BCrypt.Net.BCrypt.Verify(request.NewPassword, auth.Password))
+            throw new PasswordReuseException();
+
+
+        auth.Password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
         auth.Updated = DateTime.Now;
 
         _databaseContext.Auths.Update(auth);
         await _databaseContext.SaveChangesAsync();
 
-        return $"Password for the user with id {id} was successfully changed.";
+        return new MessageOut($"Password for the user with id {id} was successfully changed.");
     }
 
-    public async Task<string> ChangePhoneNumber(int id, ChangeUserPhoneNumberIn request) {
+
+    public async Task<MessageOut> ChangePhoneNumber(int id, ChangeUserPhoneNumberIn request) {
         User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id == id);
         if (user is null) throw new UserNotFoundException(id);
+
+        List<User> samePhoneNumbers = await _databaseContext.Users.Where(user => user.PhoneNumber.Equals(request.PhoneNumber) && user.Id != id).ToListAsync();
+
+        if (samePhoneNumbers.Count > 0) 
+            throw new OtherUserExistWithNewProvidedPhoneNumberException();
+
+        if (user.PhoneNumber.Equals(request.PhoneNumber)) throw new SamePhoneNumberException();
 
         user.PhoneNumber = request.PhoneNumber;
         user.Updated = DateTime.Now;
@@ -151,10 +164,10 @@ public sealed class UserService : IUserService {
         _databaseContext.Users.Update(user);
         await _databaseContext.SaveChangesAsync();
 
-        return $"Phone number for the user with id {id} was successfully changed.";
+        return new MessageOut($"Phone number for the user with id {id} was successfully changed.");
     }
 
-    public async Task<string> ChangeAddressAndRegion(int id, ChangeUserAddressAndRegionIn request) {
+    public async Task<MessageOut> ChangeAddressAndRegion(int id, ChangeUserAddressAndRegionIn request) {
         User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id == id);
         if (user is null) throw new UserNotFoundException(id);
 
@@ -165,18 +178,20 @@ public sealed class UserService : IUserService {
         _databaseContext.Users.Update(user);
         await _databaseContext.SaveChangesAsync();
 
-        if (!request.Address.IsNullOrEmpty() && request.Region.IsNullOrEmpty()) 
-            return $"Address for the user with id {id} was successfully changed.";
-
-        if (request.Address.IsNullOrEmpty() && !request.Region.IsNullOrEmpty()) 
-            return $"Region for the user with id {id} was successfully changed.";
-
-        return $"Address and region for the user with id {id} was successfully changed.";
+        return new MessageOut($"Address and region for the user with id {id} was successfully changed.");
     }
 
-    public async Task<string> ChangeEmail(int id, ChangeUserEmailIn request) {
+    public async Task<MessageOut> ChangeEmail(int id, ChangeUserEmailIn request) {
         Auth auth = await _databaseContext.Auths.FirstOrDefaultAsync(auth => auth.UserId == id);
+
         if (auth is null) throw new UserAuthInfoNotFoundException(id);
+
+        List<Auth> sameEmails = await _databaseContext.Auths.Where(auth => auth.Email.Equals(request.Email) && auth.UserId != id).ToListAsync();
+
+        if (sameEmails.Count > 0) 
+            throw new OtherUserExistWithNewProvidedEmailException(); 
+
+        if (auth.Email.Equals(request.Email)) throw new SameEmailException();
 
         auth.Email = request.Email;
         auth.Updated = DateTime.Now;
@@ -184,6 +199,6 @@ public sealed class UserService : IUserService {
         _databaseContext.Auths.Update(auth);
         await _databaseContext.SaveChangesAsync();
 
-        return $"Email for the user with id {id} was successfully changed.";
+        return new MessageOut($"Email for the user with id {id} was successfully changed.");
     }
 }
