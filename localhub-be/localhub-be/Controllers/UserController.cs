@@ -51,7 +51,7 @@ public sealed class UserController : BaseController {
         return Ok(response);
     }
 
-    [HttpPut("{id}/updateEmail"), Authorize(Roles = "Administrator")]
+    [HttpPut("{id}/updateEmail"), Authorize(Roles = "User, Administrator")]
     public async Task<ActionResult<MessageOut>> UpdateEmail(int id, ChangeUserEmailIn request) {
         ValidateModelState();
         MessageOut response = await _userService.ChangeEmail(id, request);
@@ -59,7 +59,7 @@ public sealed class UserController : BaseController {
         return Ok(response);
     }
 
-    [HttpPut("{id}/updatePhoneNumber"), Authorize(Roles = "Administrator")]
+    [HttpPut("{id}/updatePhoneNumber"), Authorize(Roles = "User, Administrator")]
     public async Task<ActionResult<MessageOut>> UpdatePhoneNumber(int id, ChangeUserPhoneNumberIn request) {
         ValidateModelState();
         MessageOut response = await _userService.ChangePhoneNumber(id, request);
@@ -67,7 +67,7 @@ public sealed class UserController : BaseController {
         return Ok(response);
     }
 
-    [HttpPut("{id}/updateAddressAndRegion"), Authorize(Roles = "Administrator")]
+    [HttpPut("{id}/updateAddressAndRegion"), Authorize(Roles = "User, Administrator")]
     public async Task<ActionResult<MessageOut>> UpdateUserAddressAndRegion(int id, ChangeUserAddressAndRegionIn request) {
         ValidateModelState();
         MessageOut response = await _userService.ChangeAddressAndRegion(id, request);
