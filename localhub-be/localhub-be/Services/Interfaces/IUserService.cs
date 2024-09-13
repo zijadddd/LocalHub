@@ -10,4 +10,5 @@ public interface IUserService {
     Task<MessageOut> ChangeEmail(int id, ChangeUserEmailIn request);
     Task<MessageOut> ChangePhoneNumber(int id, ChangeUserPhoneNumberIn request);
     Task<MessageOut> ChangeAddressAndRegion(int id, ChangeUserAddressAndRegionIn request);
+    Task<PictureOut> ChangeProfilePicture(int id, PictureIn request);
 }

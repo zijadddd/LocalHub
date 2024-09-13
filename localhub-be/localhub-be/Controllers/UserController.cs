@@ -74,4 +74,12 @@ public sealed class UserController : BaseController {
 
         return Ok(response);
     }
+
+    [HttpPut("{id}/updateProfilePhogo"), Authorize(Roles = "User, Administrator")]
+    public async Task<ActionResult<PictureOut>> UpdateUserProfilcePicture(int id, PictureIn request) {
+        ValidateModelState();
+        PictureOut response = await _userService.ChangeProfilePicture(id, request);
+
+        return Ok(response);
+    }
 }

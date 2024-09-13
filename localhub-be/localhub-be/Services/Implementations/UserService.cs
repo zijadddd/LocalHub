@@ -3,15 +3,20 @@ using localhub_be.Core.Exceptions;
 using localhub_be.Models.DAOs;
 using localhub_be.Models.DTOs;
 using localhub_be.Services.Interfaces;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Reflection.Metadata.Ecma335;
 
 namespace localhub_be.Services.Implementations;
 public sealed class UserService : IUserService {
     private readonly DatabaseContext _databaseContext;
+    private readonly IWebHostEnvironment webHostEnvironment;
 
-    public UserService(DatabaseContext databaseContext) {
+    public UserService(DatabaseContext databaseContext, IWebHostEnvironment webHostEnvironment) {
         _databaseContext = databaseContext;
+        this.webHostEnvironment = webHostEnvironment;
     }
 
     public async Task<UserOut> Create(UserIn request) {
@@ -44,7 +49,7 @@ public sealed class UserService : IUserService {
             MembershipDate = DateTime.Parse(request.MembershipDate),    
         };
 
-        await _databaseContext.Users.AddAsync(user);
+        _databaseContext.Users.Add(user);
 
         Auth authInfo = new Auth {
             Email = request.Email,
@@ -53,7 +58,7 @@ public sealed class UserService : IUserService {
             Role = role
         };
 
-        await _databaseContext.Auths.AddAsync(authInfo);
+        _databaseContext.Auths.Add(authInfo);
         await _databaseContext.SaveChangesAsync();
 
         UserOut response = new UserOut(
@@ -200,5 +205,28 @@ public sealed class UserService : IUserService {
         await _databaseContext.SaveChangesAsync();
 
         return new MessageOut($"Email for the user with id {id} was successfully changed.");
+    }
+
+    public async Task<PictureOut> ChangeProfilePicture(int id, PictureIn request) {
+        if (request.Image is null) throw new ImageNotProvidedException();
+        if (request.Image.Length > 200 * 1024) throw new ImageSizeExceededException();
+
+        string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "profile-pictures");
+        string uniqueFileName = Guid.NewGuid().ToString() + "_" + request.Image.FileName;
+        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+        using (var fileStream = new FileStream(filePath, FileMode.Create)) {
+            request.Image.CopyTo(fileStream);
+        }
+
+        User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id == id);
+        if (user is null) throw new UserNotFoundException(id);
+
+        user.ProfilePhoto = filePath;
+
+        _databaseContext.Users.Update(user);
+        await _databaseContext.SaveChangesAsync();
+
+        return new PictureOut(filePath);
     }
 }

@@ -392,3 +392,5 @@ yarn-error.log*
 
 .vs
 .env
+
+localhub-be/wwwroot/profile-pictures/*
