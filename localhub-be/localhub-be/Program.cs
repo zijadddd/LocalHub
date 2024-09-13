@@ -12,6 +12,7 @@ using System.Net;
 using localhub_be.Models.DTOs;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +56,7 @@ builder.Services.AddCors(options => {
                   });
 });
 
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -86,6 +88,7 @@ builder.Services.AddSwaggerGen(c => {
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IFileService, FileService>();
 
 builder.Services.Configure<ApiBehaviorOptions>(options => {
     options.SuppressModelStateInvalidFilter = true;
@@ -121,6 +124,11 @@ app.UseExceptionHandler(options => {
             await context.Response.WriteAsync(jsonResponse).ConfigureAwait(false);
         }
     });
+});
+
+app.UseStaticFiles(new StaticFileOptions {
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Uploads")),
+    RequestPath = "/Uploads"
 });
 
 app.UseCors();

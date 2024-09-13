@@ -12,11 +12,11 @@ using System.Reflection.Metadata.Ecma335;
 namespace localhub_be.Services.Implementations;
 public sealed class UserService : IUserService {
     private readonly DatabaseContext _databaseContext;
-    private readonly IWebHostEnvironment webHostEnvironment;
+    private readonly IFileService _fileService;
 
-    public UserService(DatabaseContext databaseContext, IWebHostEnvironment webHostEnvironment) {
+    public UserService(DatabaseContext databaseContext, IFileService fileService) {
         _databaseContext = databaseContext;
-        this.webHostEnvironment = webHostEnvironment;
+        _fileService = fileService;
     }
 
     public async Task<UserOut> Create(UserIn request) {
@@ -208,25 +208,16 @@ public sealed class UserService : IUserService {
     }
 
     public async Task<PictureOut> ChangeProfilePicture(int id, PictureIn request) {
-        if (request.Image is null) throw new ImageNotProvidedException();
-        if (request.Image.Length > 200 * 1024) throw new ImageSizeExceededException();
-
-        string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "profile-pictures");
-        string uniqueFileName = Guid.NewGuid().ToString() + "_" + request.Image.FileName;
-        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-        using (var fileStream = new FileStream(filePath, FileMode.Create)) {
-            request.Image.CopyTo(fileStream);
-        }
-
         User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id == id);
         if (user is null) throw new UserNotFoundException(id);
 
-        user.ProfilePhoto = filePath;
+        PictureOut response = await _fileService.SaveFileAsync(request);
+
+        user.ProfilePhoto = response.FilePath;
 
         _databaseContext.Users.Update(user);
         await _databaseContext.SaveChangesAsync();
 
-        return new PictureOut(filePath);
+        return response;
     }
 }
