@@ -2,6 +2,6 @@
 
 namespace localhub_be.Services.Interfaces;
 public interface IFileService {
-    Task<PictureOut> SaveFileAsync(PictureIn request);
+    Task<PictureOut> SaveFile(PictureIn request);
     MessageOut DeleteFile(string fileNameWithExtension);
 }
