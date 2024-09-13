@@ -3,11 +3,8 @@ using localhub_be.Core.Exceptions;
 using localhub_be.Models.DAOs;
 using localhub_be.Models.DTOs;
 using localhub_be.Services.Interfaces;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Reflection.Metadata.Ecma335;
 
 namespace localhub_be.Services.Implementations;
 public sealed class UserService : IUserService {
@@ -213,8 +210,28 @@ public sealed class UserService : IUserService {
 
         PictureOut response = await _fileService.SaveFileAsync(request);
 
-        user.ProfilePhoto = response.FilePath;
+        user.ProfilePhotoUrl = response.FilePath;
 
+        _databaseContext.Users.Update(user);
+        await _databaseContext.SaveChangesAsync();
+
+        return response;
+    }
+
+    public async Task<MessageOut> DeleteProfilePhoto(int id) {
+        User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id == id);
+        if (user is null) throw new UserNotFoundException(id);
+
+        string uploadsPrefix = "/Uploads/";
+        int index = user.ProfilePhotoUrl.IndexOf(uploadsPrefix);
+
+        if (index == -1) throw new InvalidImageNameException();
+
+        string result = user.ProfilePhotoUrl.Substring(index + uploadsPrefix.Length);
+
+        MessageOut response = _fileService.DeleteFile(result);
+
+        user.ProfilePhotoUrl = "";
         _databaseContext.Users.Update(user);
         await _databaseContext.SaveChangesAsync();
 

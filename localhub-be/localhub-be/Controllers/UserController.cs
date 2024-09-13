@@ -82,4 +82,11 @@ public sealed class UserController : BaseController {
 
         return Ok(response);
     }
+
+    [HttpDelete("{id}/deleteProfilePhoto"), Authorize(Roles = "User, Administrator")]
+    public async Task<ActionResult<MessageOut>> DeleteUserProfilePhoto(int id) {
+        MessageOut response = await _userService.DeleteProfilePhoto(id);
+
+        return Ok(response);
+    }
 }

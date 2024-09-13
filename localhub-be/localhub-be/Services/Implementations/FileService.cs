@@ -2,6 +2,7 @@
 using localhub_be.Core.Exceptions;
 using localhub_be.Models.DTOs;
 using localhub_be.Services.Interfaces;
+using Microsoft.Extensions.Hosting;
 using System;
 
 namespace localhub_be.Services.Implementations;
@@ -46,7 +47,16 @@ public sealed class FileService : IFileService {
         return new PictureOut(fileUrl);
     }
 
-    public MessageOut DeleteFile(string fileNameWithExtension) {
-        throw new NotImplementedException();
+    public MessageOut DeleteFile(string imageName) {
+        if (string.IsNullOrEmpty(imageName)) throw new ImageNotProvidedException();
+        
+        var contentPath = _environment.ContentRootPath;
+        var path = Path.Combine(contentPath, $"Uploads", imageName);
+
+        if (!File.Exists(path)) throw new FileNotFoundException($"Invalid file path");
+
+        File.Delete(path);
+        
+        return new MessageOut("Photo successfully deleted.");
     }
 }

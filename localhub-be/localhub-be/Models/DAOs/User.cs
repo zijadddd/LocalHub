@@ -11,5 +11,5 @@ public sealed class User {
     public DateTime Created { get; set; } = DateTime.Now;
     public DateTime Updated { get; set; }
     public Auth? Auth { get; set; }
-    public string? ProfilePhoto { get; set; }
+    public string? ProfilePhotoUrl { get; set; }
 }
