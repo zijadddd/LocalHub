@@ -233,7 +233,7 @@ public sealed class UserService : IUserService {
 
         MessageOut response = _fileService.DeleteFile(result);
 
-        user.ProfilePhotoUrl = "";
+        user.ProfilePhotoUrl = null;
         user.Updated = DateTime.Now;
 
         _databaseContext.Users.Update(user);
