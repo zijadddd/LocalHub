@@ -211,6 +211,7 @@ public sealed class UserService : IUserService {
         PictureOut response = await _fileService.SaveFile(request);
 
         user.ProfilePhotoUrl = response.FilePath;
+        user.Updated = DateTime.Now;
 
         _databaseContext.Users.Update(user);
         await _databaseContext.SaveChangesAsync();
@@ -232,6 +233,8 @@ public sealed class UserService : IUserService {
         MessageOut response = _fileService.DeleteFile(result);
 
         user.ProfilePhotoUrl = "";
+        user.Updated = DateTime.Now;
+
         _databaseContext.Users.Update(user);
         await _databaseContext.SaveChangesAsync();
 
