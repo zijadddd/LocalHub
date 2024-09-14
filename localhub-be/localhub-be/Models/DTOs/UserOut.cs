@@ -1,6 +1,6 @@
 ﻿namespace localhub_be.Models.DTOs;
 public sealed record UserOut {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public DateTime BirthDate { get; set; }
@@ -12,7 +12,7 @@ public sealed record UserOut {
     public DateTime Updated { get; set; }
     public string? Email { get; set; }
 
-    public UserOut(int id, string? firstName, string? lastName, DateTime birthDate, string? address, string? region, string? phoneNumber, DateTime membershipDate, DateTime created, DateTime updated, string? email) {
+    public UserOut(Guid id, string? firstName, string? lastName, DateTime birthDate, string? address, string? region, string? phoneNumber, DateTime membershipDate, DateTime created, DateTime updated, string? email) {
         Id = id;
         FirstName = firstName;
         LastName = lastName;

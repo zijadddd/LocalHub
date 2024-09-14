@@ -8,6 +8,7 @@ using System;
 
 namespace localhub_be.Services.Implementations;
 public sealed class UserService : IUserService {
+
     private readonly DatabaseContext _databaseContext;
     private readonly IFileService _fileService;
 
@@ -76,7 +77,7 @@ public sealed class UserService : IUserService {
     }
 
     public async Task<MessageOut> Delete(int id) {
-        User user = await _databaseContext.Users.Include(user => user.Auth).FirstOrDefaultAsync(user => user.Id == id);
+        User user = await _databaseContext.Users.Include(user => user.Auth).FirstOrDefaultAsync(user => user.Id.Equals(id));
         if (user is null) throw new UserNotFoundException(id);
 
         _databaseContext.Remove(user);
@@ -86,7 +87,7 @@ public sealed class UserService : IUserService {
     }
 
     public async Task<UserOut> Get(int id) {
-        User user = await _databaseContext.Users.Include(user => user.Auth).FirstOrDefaultAsync(user => user.Id == id);
+        User user = await _databaseContext.Users.Include(user => user.Auth).FirstOrDefaultAsync(user => user.Id.Equals(id));
         if (user is null) throw new UserNotFoundException(id);
 
         UserOut response = new UserOut(
@@ -128,7 +129,7 @@ public sealed class UserService : IUserService {
     }
 
     public async Task<MessageOut> ChangePassword(int id, ChangeUserPasswordIn request) {
-        Auth auth = await _databaseContext.Auths.FirstOrDefaultAsync(auth => auth.UserId == id);
+        Auth auth = await _databaseContext.Auths.FirstOrDefaultAsync(auth => auth.UserId.Equals(id));
 
         if (auth is null) throw new UserAuthInfoNotFoundException(id);
 
@@ -150,10 +151,10 @@ public sealed class UserService : IUserService {
 
 
     public async Task<MessageOut> ChangePhoneNumber(int id, ChangeUserPhoneNumberIn request) {
-        User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id == id);
+        User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id.Equals(id));
         if (user is null) throw new UserNotFoundException(id);
 
-        List<User> samePhoneNumbers = await _databaseContext.Users.Where(user => user.PhoneNumber.Equals(request.PhoneNumber) && user.Id != id).ToListAsync();
+        List<User> samePhoneNumbers = await _databaseContext.Users.Where(user => user.PhoneNumber.Equals(request.PhoneNumber) && !user.Id.Equals(id)).ToListAsync();
 
         if (samePhoneNumbers.Count > 0) 
             throw new OtherUserExistWithNewProvidedPhoneNumberException();
@@ -170,7 +171,7 @@ public sealed class UserService : IUserService {
     }
 
     public async Task<MessageOut> ChangeAddressAndRegion(int id, ChangeUserAddressAndRegionIn request) {
-        User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id == id);
+        User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id.Equals(id));
         if (user is null) throw new UserNotFoundException(id);
 
         user.Address = request.Address;
@@ -184,11 +185,11 @@ public sealed class UserService : IUserService {
     }
 
     public async Task<MessageOut> ChangeEmail(int id, ChangeUserEmailIn request) {
-        Auth auth = await _databaseContext.Auths.FirstOrDefaultAsync(auth => auth.UserId == id);
+        Auth auth = await _databaseContext.Auths.FirstOrDefaultAsync(auth => auth.UserId.Equals(id));
 
         if (auth is null) throw new UserAuthInfoNotFoundException(id);
 
-        List<Auth> sameEmails = await _databaseContext.Auths.Where(auth => auth.Email.Equals(request.Email) && auth.UserId != id).ToListAsync();
+        List<Auth> sameEmails = await _databaseContext.Auths.Where(auth => auth.Email.Equals(request.Email) && !auth.UserId.Equals(id)).ToListAsync();
 
         if (sameEmails.Count > 0) 
             throw new OtherUserExistWithNewProvidedEmailException(); 
@@ -205,7 +206,7 @@ public sealed class UserService : IUserService {
     }
 
     public async Task<PictureOut> ChangeProfilePicture(int id, PictureIn request) {
-        User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id == id);
+        User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id.Equals(id));
         if (user is null) throw new UserNotFoundException(id);
 
         PictureOut response = await _fileService.SaveFile(request);
@@ -220,7 +221,7 @@ public sealed class UserService : IUserService {
     }
 
     public async Task<MessageOut> DeleteProfilePhoto(int id) {
-        User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id == id);
+        User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id.Equals(id));
         if (user is null) throw new UserNotFoundException(id);
 
         string uploadsPrefix = "/Uploads/";
