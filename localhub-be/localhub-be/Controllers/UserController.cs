@@ -22,7 +22,7 @@ public sealed class UserController : BaseController {
     }
 
     [HttpGet("{id}"), Authorize(Roles = "User, Administrator")]
-    public async Task<ActionResult<UserOut>> GetUser(int id) {
+    public async Task<ActionResult<UserOut>> GetUser(Guid id) {
         UserOut response = await _userService.Get(id);
 
         return Ok(response);
@@ -37,14 +37,14 @@ public sealed class UserController : BaseController {
     }
 
     [HttpDelete, Authorize(Roles = "Administrator")]
-    public async Task<ActionResult<MessageOut>> DeleteUser(int id) {
+    public async Task<ActionResult<MessageOut>> DeleteUser(Guid id) {
         MessageOut response = await _userService.Delete(id);
 
         return Ok(response);
     }
 
     [HttpPut("{id}/updatePassword"), Authorize(Roles = "User, Administrator")]
-    public async Task<ActionResult<MessageOut>> ChangeUserPassword(int id, ChangeUserPasswordIn request) {
+    public async Task<ActionResult<MessageOut>> ChangeUserPassword(Guid id, ChangeUserPasswordIn request) {
         ValidateModelState();
         MessageOut response = await _userService.ChangePassword(id, request);
 
@@ -52,7 +52,7 @@ public sealed class UserController : BaseController {
     }
 
     [HttpPut("{id}/updateEmail"), Authorize(Roles = "User, Administrator")]
-    public async Task<ActionResult<MessageOut>> UpdateEmail(int id, ChangeUserEmailIn request) {
+    public async Task<ActionResult<MessageOut>> UpdateEmail(Guid id, ChangeUserEmailIn request) {
         ValidateModelState();
         MessageOut response = await _userService.ChangeEmail(id, request);
 
@@ -60,7 +60,7 @@ public sealed class UserController : BaseController {
     }
 
     [HttpPut("{id}/updatePhoneNumber"), Authorize(Roles = "User, Administrator")]
-    public async Task<ActionResult<MessageOut>> UpdatePhoneNumber(int id, ChangeUserPhoneNumberIn request) {
+    public async Task<ActionResult<MessageOut>> UpdatePhoneNumber(Guid id, ChangeUserPhoneNumberIn request) {
         ValidateModelState();
         MessageOut response = await _userService.ChangePhoneNumber(id, request);
 
@@ -68,7 +68,7 @@ public sealed class UserController : BaseController {
     }
 
     [HttpPut("{id}/updateAddressAndRegion"), Authorize(Roles = "User, Administrator")]
-    public async Task<ActionResult<MessageOut>> UpdateUserAddressAndRegion(int id, ChangeUserAddressAndRegionIn request) {
+    public async Task<ActionResult<MessageOut>> UpdateUserAddressAndRegion(Guid id, ChangeUserAddressAndRegionIn request) {
         ValidateModelState();
         MessageOut response = await _userService.ChangeAddressAndRegion(id, request);
 
@@ -76,7 +76,7 @@ public sealed class UserController : BaseController {
     }
 
     [HttpPut("{id}/updateProfilePhogo"), Authorize(Roles = "User, Administrator")]
-    public async Task<ActionResult<PictureOut>> UpdateUserProfilcePicture(int id, PictureIn request) {
+    public async Task<ActionResult<PictureOut>> UpdateUserProfilcePicture(Guid id, PictureIn request) {
         ValidateModelState();
         PictureOut response = await _userService.ChangeProfilePicture(id, request);
 
@@ -84,7 +84,7 @@ public sealed class UserController : BaseController {
     }
 
     [HttpDelete("{id}/deleteProfilePhoto"), Authorize(Roles = "User, Administrator")]
-    public async Task<ActionResult<MessageOut>> DeleteUserProfilePhoto(int id) {
+    public async Task<ActionResult<MessageOut>> DeleteUserProfilePhoto(Guid id) {
         MessageOut response = await _userService.DeleteProfilePhoto(id);
 
         return Ok(response);

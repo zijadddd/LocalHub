@@ -76,7 +76,7 @@ public sealed class UserService : IUserService {
         return response;
     }
 
-    public async Task<MessageOut> Delete(int id) {
+    public async Task<MessageOut> Delete(Guid id) {
         User user = await _databaseContext.Users.Include(user => user.Auth).FirstOrDefaultAsync(user => user.Id.Equals(id));
         if (user is null) throw new UserNotFoundException(id);
 
@@ -86,7 +86,7 @@ public sealed class UserService : IUserService {
         return new MessageOut($"User with id {id} was successfully deleted.");
     }
 
-    public async Task<UserOut> Get(int id) {
+    public async Task<UserOut> Get(Guid id) {
         User user = await _databaseContext.Users.Include(user => user.Auth).FirstOrDefaultAsync(user => user.Id.Equals(id));
         if (user is null) throw new UserNotFoundException(id);
 
@@ -128,7 +128,7 @@ public sealed class UserService : IUserService {
         return response;
     }
 
-    public async Task<MessageOut> ChangePassword(int id, ChangeUserPasswordIn request) {
+    public async Task<MessageOut> ChangePassword(Guid id, ChangeUserPasswordIn request) {
         Auth auth = await _databaseContext.Auths.FirstOrDefaultAsync(auth => auth.UserId.Equals(id));
 
         if (auth is null) throw new UserAuthInfoNotFoundException(id);
@@ -150,7 +150,7 @@ public sealed class UserService : IUserService {
     }
 
 
-    public async Task<MessageOut> ChangePhoneNumber(int id, ChangeUserPhoneNumberIn request) {
+    public async Task<MessageOut> ChangePhoneNumber(Guid id, ChangeUserPhoneNumberIn request) {
         User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id.Equals(id));
         if (user is null) throw new UserNotFoundException(id);
 
@@ -170,7 +170,7 @@ public sealed class UserService : IUserService {
         return new MessageOut($"Phone number for the user with id {id} was successfully changed.");
     }
 
-    public async Task<MessageOut> ChangeAddressAndRegion(int id, ChangeUserAddressAndRegionIn request) {
+    public async Task<MessageOut> ChangeAddressAndRegion(Guid id, ChangeUserAddressAndRegionIn request) {
         User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id.Equals(id));
         if (user is null) throw new UserNotFoundException(id);
 
@@ -184,7 +184,7 @@ public sealed class UserService : IUserService {
         return new MessageOut($"Address and region for the user with id {id} was successfully changed.");
     }
 
-    public async Task<MessageOut> ChangeEmail(int id, ChangeUserEmailIn request) {
+    public async Task<MessageOut> ChangeEmail(Guid id, ChangeUserEmailIn request) {
         Auth auth = await _databaseContext.Auths.FirstOrDefaultAsync(auth => auth.UserId.Equals(id));
 
         if (auth is null) throw new UserAuthInfoNotFoundException(id);
@@ -205,7 +205,7 @@ public sealed class UserService : IUserService {
         return new MessageOut($"Email for the user with id {id} was successfully changed.");
     }
 
-    public async Task<PictureOut> ChangeProfilePicture(int id, PictureIn request) {
+    public async Task<PictureOut> ChangeProfilePicture(Guid id, PictureIn request) {
         User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id.Equals(id));
         if (user is null) throw new UserNotFoundException(id);
 
@@ -220,7 +220,7 @@ public sealed class UserService : IUserService {
         return response;
     }
 
-    public async Task<MessageOut> DeleteProfilePhoto(int id) {
+    public async Task<MessageOut> DeleteProfilePhoto(Guid id) {
         User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id.Equals(id));
         if (user is null) throw new UserNotFoundException(id);
 

@@ -8,7 +8,7 @@ public sealed class UserAuthInfoNotFoundException : Exception {
         StatusCode = statusCode;
     }
 
-    public UserAuthInfoNotFoundException(int id, HttpStatusCode statusCode = HttpStatusCode.NotFound)
+    public UserAuthInfoNotFoundException(Guid id, HttpStatusCode statusCode = HttpStatusCode.NotFound)
     : base($"User auth info with user id {id} not found.") {
         StatusCode = statusCode;
     }
