@@ -5,4 +5,10 @@ public sealed record PictureIn {
     [Required(ErrorMessage = "Please choose an image.")]
     [Display(Name = "Picture")]
     public IFormFile? Image { get; init; }
+
+    public PictureIn() { }
+
+    public PictureIn(IFormFile? image) {
+        Image = image;
+    }
 }

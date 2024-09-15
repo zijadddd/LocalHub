@@ -21,7 +21,6 @@ public sealed class FileService : IFileService {
     }
 
     public async Task<PictureOut> SaveFile(PictureIn request) {
-        if (request is null || request.Image is null) throw new ImageNotProvidedException();
         if (request.Image.Length > 200 * 1024) throw new ImageSizeExceededException();
 
 

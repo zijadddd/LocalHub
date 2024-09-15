@@ -12,8 +12,8 @@ public sealed class DatabaseContext : DbContext {
     public DbSet<User> Users { get; set; }
     public DbSet<Auth> Auths { get; set; }
     public DbSet<Role> Roles { get; set; }
-    public DbSet<Event> Events { get; set; }
-    public DbSet<EventAttendance> eventAttendances { get; set; }
+    public DbSet<Post> Posts { get; set; }
+    public DbSet<Comment> Comments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         Guid adminRoleId = Guid.NewGuid();

@@ -9,7 +9,8 @@ public sealed class User {
     public string? PhoneNumber { get; set; }
     public DateTime MembershipDate { get; set; }
     public DateTime Created { get; set; } = DateTime.Now;
-    public DateTime Updated { get; set; }
+    public DateTime Updated { get; set; }  
     public Auth? Auth { get; set; }
     public string? ProfilePhotoUrl { get; set; }
+    public List<Comment> Comments { get; } = [];
 }

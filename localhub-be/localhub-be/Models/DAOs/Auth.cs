@@ -4,7 +4,7 @@ public sealed class Auth {
     public string? Email { get; set; } 
     public string? Password { get; set; } 
     public DateTime Created { get; set; } = DateTime.Now;
-    public DateTime Updated { get; set; }
+    public DateTime Updated { get; set; } 
     public Guid RoleId { get; set; }
     public Role? Role { get; set; }
     public Guid UserId { get; set; }

@@ -4,6 +4,7 @@ using localhub_be.Models.DAOs;
 using localhub_be.Models.DTOs;
 using localhub_be.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System;
 
 namespace localhub_be.Services.Implementations;
@@ -80,6 +81,8 @@ public sealed class UserService : IUserService {
         User user = await _databaseContext.Users.Include(user => user.Auth).FirstOrDefaultAsync(user => user.Id.Equals(id));
         if (user is null) throw new UserNotFoundException(id);
 
+        await DeleteProfilePhoto(id);
+
         _databaseContext.Remove(user);
         await _databaseContext.SaveChangesAsync();
 
@@ -109,7 +112,7 @@ public sealed class UserService : IUserService {
 
     public async Task<List<UserOut>> GetAll() {
         List<User> users = await _databaseContext.Users.Include(user => user.Auth).ToListAsync();
-        if (users is null) throw new NoUsersFoundException();
+        if (users.IsNullOrEmpty()) throw new NoUsersFoundException();
 
         List<UserOut> response = users.Select(user => new UserOut(
             user.Id, 
@@ -206,6 +209,8 @@ public sealed class UserService : IUserService {
     }
 
     public async Task<PictureOut> ChangeProfilePicture(Guid id, PictureIn request) {
+        if (request is null || request.Image is null) throw new ImageNotProvidedException();
+
         User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id.Equals(id));
         if (user is null) throw new UserNotFoundException(id);
 
@@ -223,6 +228,7 @@ public sealed class UserService : IUserService {
     public async Task<MessageOut> DeleteProfilePhoto(Guid id) {
         User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id.Equals(id));
         if (user is null) throw new UserNotFoundException(id);
+        if (user.ProfilePhotoUrl is null) throw new UserDoesNotHaveProfilePhotoException(id);
 
         string uploadsPrefix = "/Uploads/";
         int index = user.ProfilePhotoUrl.IndexOf(uploadsPrefix);
@@ -240,5 +246,9 @@ public sealed class UserService : IUserService {
         await _databaseContext.SaveChangesAsync();
 
         return response;
+    }
+
+    public Task<UserOut> Update(Guid id, UserIn request) {
+        throw new NotImplementedException();
     }
 }
