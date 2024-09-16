@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace localhub_be.Controllers;
 [Route("api/[controller]")]
 [ApiController]
-public class PostController : BaseController {
+public sealed class PostController : BaseController {
 
     private readonly IPostService _postService;
 
