@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { PictureOut } from '../../shared/models/picture.model';
 import { UserService } from '../../shared/services/user.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navigation-bar',
@@ -18,7 +19,8 @@ export class NavigationBarComponent implements OnInit {
 
   constructor(
     private readonly userService: UserService,
-    private readonly authService: AuthenticationService
+    private readonly authService: AuthenticationService,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
@@ -43,5 +45,10 @@ export class NavigationBarComponent implements OnInit {
       this.authService.getUserRoleFromToken(localStorage.getItem('token')!) ===
       'Administrator'
     );
+  }
+
+  logoutUser() {
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
   }
 }
