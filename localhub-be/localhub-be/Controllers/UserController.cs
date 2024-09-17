@@ -96,4 +96,11 @@ public sealed class UserController : BaseController {
 
         return Ok(response);
     }
+
+    [HttpGet("{id}/getUserRole"), Authorize(Roles = "User, Administrator")]
+    public async Task<ActionResult<RoleOut>> GetUserRole(Guid id) {
+        RoleOut response = await _userService.GetUserRole(id);
+
+        return response;
+    }
 }
