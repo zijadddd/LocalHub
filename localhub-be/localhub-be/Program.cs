@@ -133,7 +133,7 @@ app.UseStaticFiles(new StaticFileOptions {
     RequestPath = "/Uploads"
 });
 
-app.UseCors();
+app.UseCors("AuthenticationPolicy");
 
 app.UseHttpsRedirection();
 
