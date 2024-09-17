@@ -1,8 +1,8 @@
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../../../../shared/services/user.service';
-import { AuthenticationService } from '../../../../shared/services/authentication.service';
-import { PictureOut } from '../../../../shared/models/picture.model';
+import { PictureOut } from '../../shared/models/picture.model';
+import { UserService } from '../../shared/services/user.service';
+import { AuthenticationService } from '../../shared/services/authentication.service';
 
 @Component({
   selector: 'app-navigation-bar',

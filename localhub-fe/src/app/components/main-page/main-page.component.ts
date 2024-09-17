@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { PostOut } from '../../shared/models/post.model';
-import { HttpClient } from '@angular/common/http';
 import { PostService } from '../../shared/services/post.service';
 import { NgFor, NgIf } from '@angular/common';
-import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
+import { NavigationBarComponent } from '../navigation-bar/navigation-bar.component';
 
 @Component({
   selector: 'app-main-page',
