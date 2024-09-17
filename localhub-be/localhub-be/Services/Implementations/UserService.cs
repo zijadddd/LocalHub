@@ -5,8 +5,6 @@ using localhub_be.Models.DTOs;
 using localhub_be.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Reflection.Metadata.Ecma335;
 
 namespace localhub_be.Services.Implementations;
 public sealed class UserService : IUserService {
@@ -261,5 +259,14 @@ public sealed class UserService : IUserService {
         if (user is null) throw new UserNotFoundException(id);
 
         return new PictureOut(user.ProfilePhotoUrl);
+    }
+
+    public async Task<RoleOut> GetUserRole(Guid id) {
+        Auth auth = await _databaseContext.Auths.Include(auth => auth.Role).FirstOrDefaultAsync(auth => auth.UserId.Equals(id));
+        if (auth is null) throw new UserNotFoundException(id);
+
+        RoleOut response = new RoleOut(auth.Role.Name);
+
+        return response;
     }
 }

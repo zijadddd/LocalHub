@@ -7,4 +7,5 @@ public sealed class Post {
     public DateTime Created { get; set; } = DateTime.Now;
     public DateTime Updated { get; set; } 
     public List<Comment> Comments { get; } = [];
+    public List<Like> Likes { get; } = [];
 }

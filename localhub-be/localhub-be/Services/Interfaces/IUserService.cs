@@ -9,4 +9,5 @@ public interface IUserService : IGeneric<UserIn, UserOut> {
     Task<PictureOut> ChangeProfilePicture(Guid id, PictureIn request);
     Task<MessageOut> DeleteProfilePhoto(Guid id);
     Task<PictureOut> GetUserProfilePhoto(Guid id);
+    Task<RoleOut> GetUserRole(Guid id);
 }

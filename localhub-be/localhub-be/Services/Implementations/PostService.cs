@@ -29,7 +29,7 @@ public sealed class PostService : IPostService {
         _databaseContext.Posts.Add(post);
         await _databaseContext.SaveChangesAsync();
 
-        PostOut response = new PostOut(post.Id, post.Name, post.Description, post.PhotoUrl, post.Created, post.Updated);
+        PostOut response = new PostOut(post.Id, post.Name, post.Description, post.PhotoUrl, 0, 0, post.Created, post.Updated);
 
         return response;
     }
@@ -54,27 +54,52 @@ public sealed class PostService : IPostService {
     }
 
     public async Task<PostOut> Get(Guid id) {
-        Post post = await _databaseContext.Posts.FirstOrDefaultAsync(post => post.Id.Equals(id));
+        Post post = await _databaseContext.Posts.Include(post => post.Likes).Include(post => post.Comments).FirstOrDefaultAsync(post => post.Id.Equals(id));
         if (post is null) throw new PostNotFoundException(id);
 
-        PostOut response = new PostOut(post.Id, post.Name, post.Description, post.PhotoUrl, post.Created, post.Updated);
+        PostOut response = new PostOut(post.Id, post.Name, post.Description, post.PhotoUrl, post.Likes.Count, post.Comments.Count, post.Created, post.Updated);
 
         return response;
     }
 
     public async Task<List<PostOut>> GetAll() {
-        List<Post> posts = await _databaseContext.Posts.Include(post => post.Comments).ToListAsync();
+        List<Post> posts = await _databaseContext.Posts.Include(post => post.Likes).Include(post => post.Comments).ToListAsync();
         if (posts.IsNullOrEmpty()) throw new NoPostsAvailableException();
 
         List<PostOut> response = posts.Select(post => new PostOut(
-            post.Id, post.Name, post.Description, post.PhotoUrl, post.Created, post.Updated
+            post.Id, post.Name, post.Description, post.PhotoUrl, post.Likes.Count, post.Comments.Count, post.Created, post.Updated
         )).ToList();
 
         return response;
     }
 
+    public async Task<LikeAndCommentCountOut> GetUserLikeAndCommentCount(Guid userId) {
+        User user = await _databaseContext.Users.Include(user => user.Likes).Include(user => user.Comments).FirstOrDefaultAsync(user => user.Id.Equals(userId));
+        if (user is null) throw new UserNotFoundException(userId);
+
+        LikeAndCommentCountOut response = new LikeAndCommentCountOut(user.Likes.Count, user.Comments.Count);
+
+        return response;
+    }
+
+    public async Task<LikeOut> LikePost(Guid userId, Guid postId) {
+        User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId));
+        if (user is null) throw new UserNotFoundException(userId);
+
+        Post post = await _databaseContext.Posts.Include(post => post.Likes).FirstOrDefaultAsync(post => post.Id.Equals(postId));
+        if (post is null) throw new PostNotFoundException(postId);
+
+        Like like = new Like { UserId = userId, PostId = postId };
+        _databaseContext.Likes.Add(like);
+        await _databaseContext.SaveChangesAsync();
+
+        LikeOut response = new LikeOut(post.Likes.Count + 1);
+
+        return response;
+    }
+
     public async Task<PostOut> Update(Guid id, PostIn request) {
-        Post post = await _databaseContext.Posts.Include(post => post.Comments).FirstOrDefaultAsync(post => post.Id.Equals(id));
+        Post post = await _databaseContext.Posts.Include(post => post.Likes.Count).Include(post => post.Comments).FirstOrDefaultAsync(post => post.Id.Equals(id));
         if (post is null) throw new PostNotFoundException(id);
 
         post.Name = request.Name;
@@ -104,7 +129,7 @@ public sealed class PostService : IPostService {
         _databaseContext.Posts.Update(post);
         await _databaseContext.SaveChangesAsync();
 
-        PostOut response = new PostOut(post.Id, post.Name, post.Description, post.PhotoUrl, post.Created, post.Updated);
+        PostOut response = new PostOut(post.Id, post.Name, post.Description, post.PhotoUrl, post.Likes.Count, post.Comments.Count, post.Created, post.Updated);
 
         return response;
     }
