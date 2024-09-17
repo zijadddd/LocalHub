@@ -1,0 +1,3 @@
+export enum WhichAction {
+  UPDATE_NAVBAR_PROFILE_PHOTO = 'UPDATE_NAVBAR_PROFILE_PHOTO',
+}

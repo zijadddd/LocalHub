@@ -13,7 +13,7 @@
         {{ post.description }}
       </p>
     </div>
-    <div class="px-6 pt-4 pb-2 flex flex-col">
+    <div class="px-6 pt-2 pb-2 flex flex-col">
       <div
         class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 w-fit"
         *ngIf="post.updated === ''"
@@ -25,6 +25,18 @@
         class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 w-fit"
       >
         Updated: {{ post.updated }}
+      </div>
+    </div>
+    <div class="px-6 pt-2 pb-2">
+      <div
+        class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 w-fit"
+      >
+        Likes: {{ post.likes }}
+      </div>
+      <div
+        class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 w-fit"
+      >
+        Comments: {{ post.comments }}
       </div>
     </div>
   </a>

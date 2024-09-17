@@ -10,5 +10,5 @@ export class UserOut {
   created: string;
   updated: string;
   email: string;
-  profilePhotoUrl: string;
+  profilePhoto: string;
 }
