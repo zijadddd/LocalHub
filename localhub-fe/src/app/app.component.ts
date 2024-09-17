@@ -1,13 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { AuthenticationPageComponent } from './components/authentication-page/authentication-page.component';
+import { BrowserModule } from '@angular/platform-browser';
+import { AuthenticationService } from './shared/services/authentication.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, AuthenticationPageComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
-export class AppComponent {
-  title = 'localhub-fe';
+export class AppComponent implements OnInit {
+  constructor(private authService: AuthenticationService) {}
+
+  ngOnInit() {
+    this.authService.checkToken();
+  }
 }

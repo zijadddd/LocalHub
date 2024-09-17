@@ -1,0 +1,148 @@
+<div class="flex flex-row-reverse w-full h-full">
+  <div class="h-full w-6/12 flex flex-col items-start justify-center ml-10">
+    <h1
+      class="text-2xl font-bold leading-7 text-gray-700 sm:truncate sm:text-3xl sm:tracking-tight underline decoration-purple-500"
+    >
+      LoginHub
+    </h1>
+    <div
+      class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-5"
+      role="alert"
+      *ngIf="isAlertVisible"
+    >
+      <span class="block sm:inline">{{ alertMessage }}</span>
+      <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+        <svg
+          class="fill-current h-6 w-6 text-red-500"
+          role="button"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+        ></svg>
+      </span>
+    </div>
+    <form
+      class="w-full max-w-sm mt-5"
+      (submit)="authenticateUser()"
+      [formGroup]="authenticateUserForm"
+    >
+      <div class="mb-6 flex-row-reverse">
+        <div class="md:w-1/3">
+          <label
+            class="block text-gray-500 font-bold mb-1 md:mb-0"
+            for="inline-full-name"
+          >
+            Email
+          </label>
+        </div>
+        <div class="md:w-2/3">
+          <input
+            class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+            [ngClass]="{
+              'border-red-500':
+                authenticateUserForm.get('email')?.invalid &&
+                authenticateUserForm.get('email')?.touched,
+              'border-gray-200':
+                authenticateUserForm.get('email')?.valid ||
+                !authenticateUserForm.get('email')?.touched
+            }"
+            id="inline-full-name"
+            type="email"
+            placeholder="janedoe@example.com"
+            formControlName="email"
+            name="username"
+            required
+          />
+        </div>
+        <div
+          *ngIf="
+            authenticateUserForm.get('email')?.invalid &&
+            authenticateUserForm.get('email')?.touched
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          <div *ngIf="authenticateUserForm.get('email')?.errors?.['required']">
+            Email is required.
+          </div>
+          <div *ngIf="authenticateUserForm.get('email')?.errors?.['email']">
+            Invalid email format.
+          </div>
+        </div>
+      </div>
+      <div class="mb-6 flex-row-reverse">
+        <div class="md:w-1/3">
+          <label
+            class="block text-gray-500 font-bold mb-1 md:mb-0"
+            for="inline-password"
+          >
+            Password
+          </label>
+        </div>
+        <div class="md:w-2/3">
+          <input
+            class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+            [ngClass]="{
+              'border-red-500':
+                authenticateUserForm.get('password')?.invalid &&
+                authenticateUserForm.get('password')?.touched,
+              'border-gray-200':
+                authenticateUserForm.get('password')?.valid ||
+                !authenticateUserForm.get('password')?.touched
+            }"
+            id="inline-password"
+            type="password"
+            placeholder="******************"
+            formControlName="password"
+            name="password"
+            required
+          />
+        </div>
+        <div
+          *ngIf="
+            authenticateUserForm.get('password')?.invalid &&
+            authenticateUserForm.get('password')?.touched
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          <div
+            *ngIf="authenticateUserForm.get('password')?.errors?.['required']"
+          >
+            Password is required.
+          </div>
+          <div
+            *ngIf="authenticateUserForm.get('password')?.errors?.['minlength']"
+          >
+            Password must be at least 8 characters long.
+          </div>
+          <div
+            *ngIf="authenticateUserForm.get('password')?.errors?.['maxlength']"
+          >
+            Password cannot be longer than 64 characters.
+          </div>
+          <div
+            *ngIf="authenticateUserForm.get('password')?.errors?.['pattern']"
+          >
+            Invalid password. Valid: Abcdef1*
+          </div>
+        </div>
+      </div>
+      <div class="md:flex md:items-center">
+        <div class="">
+          <button
+            class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+            [disabled]="!authenticateUserForm.valid"
+            type="submit"
+          >
+            Sign In
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="h-full w-6/12 flex flex-col items-end justify-center mr-10">
+    <img
+      src="/assets/login-page-img.svg"
+      alt="People"
+      class="w-6/12 pointer-events-none"
+    />
+  </div>
+</div>
