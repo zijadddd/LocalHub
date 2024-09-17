@@ -8,7 +8,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { AuthIn, AuthOut } from '../../shared/models/auth-in.model';
+import { AuthIn, AuthOut } from '../../shared/models/auth.model';
 import { NgClass, NgIf } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';

@@ -1,1 +1,32 @@
-
+<app-navigation-bar></app-navigation-bar>
+<div class="w-3/4 m-auto flex justify-center flex-col items-center mt-20">
+  <a
+    href="#"
+    class="w-2/4 block rounded overflow-hidden shadow-lg h-fit my-4"
+    *ngFor="let post of posts"
+  >
+    <div class="w-full bg-slate-200">
+      <img class="w-auto m-auto" [src]="post.imageUrl" alt="Image" />
+    </div>
+    <div class="px-6 py-4">
+      <div class="font-bold text-xl mb-2">{{ post.name }}</div>
+      <p class="text-gray-700 text-base">
+        {{ post.description }}
+      </p>
+    </div>
+    <div class="px-6 pt-4 pb-2 flex flex-col">
+      <div
+        class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 w-fit"
+        *ngIf="post.updated === ''"
+      >
+        Created: {{ post.created }}
+      </div>
+      <div
+        *ngIf="post.updated !== ''"
+        class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 w-fit"
+      >
+        Updated: {{ post.updated }}
+      </div>
+    </div>
+  </a>
+</div>
