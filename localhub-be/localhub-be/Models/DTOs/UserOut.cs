@@ -11,8 +11,9 @@ public sealed record UserOut {
     public DateTime Created { get; set; } = DateTime.Now;
     public DateTime Updated { get; set; }
     public string? Email { get; set; }
+    public string? ProfilePhoto { get; set; }
 
-    public UserOut(Guid id, string? firstName, string? lastName, DateTime birthDate, string? address, string? region, string? phoneNumber, DateTime membershipDate, DateTime created, DateTime updated, string? email) {
+    public UserOut(Guid id, string? firstName, string? lastName, DateTime birthDate, string? address, string? region, string? phoneNumber, DateTime membershipDate, DateTime created, DateTime updated, string? email, string? profilePhoto) {
         Id = id;
         FirstName = firstName;
         LastName = lastName;
@@ -24,5 +25,6 @@ public sealed record UserOut {
         Created = created;
         Updated = updated;
         Email = email;
+        ProfilePhoto = profilePhoto;
     }
 }

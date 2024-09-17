@@ -89,4 +89,11 @@ public sealed class UserController : BaseController {
 
         return Ok(response);
     }
+
+    [HttpGet("{id}/getUserProfilePhoto"), Authorize(Roles = "User, Administrator")]
+    public async Task<ActionResult<PictureOut>> GetUserProfilePhoto(Guid id) {
+        PictureOut response = await _userService.GetUserProfilePhoto(id);
+
+        return Ok(response);
+    }
 }

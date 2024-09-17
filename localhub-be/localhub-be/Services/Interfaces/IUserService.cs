@@ -8,4 +8,5 @@ public interface IUserService : IGeneric<UserIn, UserOut> {
     Task<MessageOut> ChangeAddressAndRegion(Guid id, ChangeUserAddressAndRegionIn request);
     Task<PictureOut> ChangeProfilePicture(Guid id, PictureIn request);
     Task<MessageOut> DeleteProfilePhoto(Guid id);
+    Task<PictureOut> GetUserProfilePhoto(Guid id);
 }

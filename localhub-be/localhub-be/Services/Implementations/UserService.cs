@@ -6,6 +6,7 @@ using localhub_be.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Reflection.Metadata.Ecma335;
 
 namespace localhub_be.Services.Implementations;
 public sealed class UserService : IUserService {
@@ -71,7 +72,8 @@ public sealed class UserService : IUserService {
             user.MembershipDate,
             user.Created,
             user.Updated,
-            user.Auth.Email
+            user.Auth.Email,
+            user.ProfilePhotoUrl
         );
 
         return response;
@@ -104,7 +106,8 @@ public sealed class UserService : IUserService {
             user.MembershipDate, 
             user.Created, 
             user.Updated, 
-            user.Auth.Email
+            user.Auth.Email,
+            user.ProfilePhotoUrl
         );
         
         return response;
@@ -125,7 +128,8 @@ public sealed class UserService : IUserService {
             user.MembershipDate, 
             user.Created, 
             user.Updated, 
-            user.Auth.Email
+            user.Auth.Email,
+            user.ProfilePhotoUrl
         )).ToList();
 
         return response;
@@ -250,5 +254,12 @@ public sealed class UserService : IUserService {
 
     public Task<UserOut> Update(Guid id, UserIn request) {
         throw new NotImplementedException();
+    }
+
+    public async Task<PictureOut> GetUserProfilePhoto(Guid id) {
+        User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id.Equals(id));
+        if (user is null) throw new UserNotFoundException(id);
+
+        return new PictureOut(user.ProfilePhotoUrl);
     }
 }

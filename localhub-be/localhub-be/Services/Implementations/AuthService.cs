@@ -33,7 +33,7 @@ public sealed class AuthService : IAuthService {
 
     private string CreateTokenAsync(Auth userAuthInfo) {
         List<Claim> claims = new List<Claim> {
-            new Claim(ClaimTypes.Email, userAuthInfo.Email!),
+            new Claim(ClaimTypes.NameIdentifier, userAuthInfo.UserId!.ToString()),
             new Claim(ClaimTypes.Role, userAuthInfo?.Role?.Name!)
         };
 
@@ -42,7 +42,8 @@ public sealed class AuthService : IAuthService {
 
         var token = new JwtSecurityToken(
             claims: claims,
-            expires: DateTime.Now.AddDays(1),
+            expires: DateTime.Now.AddDays(1)
+            ,
             signingCredentials: creds
         );
 
