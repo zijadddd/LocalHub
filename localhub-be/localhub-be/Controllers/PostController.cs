@@ -51,5 +51,19 @@ public sealed class PostController : BaseController {
 
         return Ok(response);
     }
+
+    [HttpPost("{userId}/{postId}/likePost"), Authorize(Roles = "User, Administrator")]
+    public async Task<ActionResult<LikeOut>> LikePost(Guid userId, Guid postId) {
+        LikeOut response = await _postService.LikePost(userId, postId);
+
+        return response;
+    }
+
+    [HttpGet("{userId}/getLikeAndCommentCount"), Authorize(Roles = "User, Administrator")]
+    public async Task<ActionResult<LikeAndCommentCountOut>> GetUserLikeAndCommentCount(Guid userId) {
+        LikeAndCommentCountOut response = await _postService.GetUserLikeAndCommentCount(userId);
+
+        return response;
+    }
 }
 
