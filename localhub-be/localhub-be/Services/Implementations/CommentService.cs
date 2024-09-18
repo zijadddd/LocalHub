@@ -15,20 +15,38 @@ public sealed class CommentService : ICommentService {
         _databaseContext = databaseContext;
     }
 
-    public async Task<CommentOut> Create(Guid postId, CommentIn request) {
+    public async Task<CommentOut> Create(Guid postId, Guid userId, CommentIn request) {
+        User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId));
+        if (user is null) throw new UserNotFoundException(userId);
+
         Post post = await _databaseContext.Posts.FirstOrDefaultAsync(post => post.Id.Equals(postId));
         if (post is null) throw new PostNotFoundException(postId);
 
         Comment comment = new Comment {
             Content = request.Content,
-            UserId = request.UserId,
-            PostId = postId,
+            UserId = user.Id,
+            PostId = post.Id,
         };
 
         _databaseContext.Comments.Add(comment);
         await _databaseContext.SaveChangesAsync();
 
-        CommentOut response = new CommentOut(comment.Id, comment.Content, comment.UserId, comment.PostId, comment.Created, comment.Updated);
+        UserOut userOut = new UserOut(
+            user.Id,
+            user.FirstName,
+            user.LastName,
+            user.BirthDate,
+            user.Address,
+            user.Region,
+            user.PhoneNumber,
+            user.MembershipDate,
+            user.Created,
+            user.Updated,
+            user.Auth?.Email,
+            user.ProfilePhotoUrl
+        );
+
+        CommentOut response = new CommentOut(comment.Id, comment.Content, userOut, comment.PostId, comment.Created, comment.Updated);
 
         return response;
     }

@@ -15,10 +15,10 @@ public sealed class CommentController : BaseController {
         _commentService = commentService;
     }
 
-    [HttpPost("{postId}"), Authorize(Roles = "User, Administrator")]
-    public async Task<ActionResult<CommentOut>> CreateComment(Guid postId, CommentIn request) {
+    [HttpPost("{postId}/{userId}"), Authorize(Roles = "User, Administrator")]
+    public async Task<ActionResult<CommentOut>> CreateComment(Guid postId, Guid userId, CommentIn request) {
         ValidateModelState();
-        CommentOut response = await _commentService.Create(postId, request);
+        CommentOut response = await _commentService.Create(postId, userId, request);
 
         return response;
     }
