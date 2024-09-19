@@ -65,5 +65,12 @@ public sealed class PostController : BaseController {
 
         return response;
     }
+
+    [HttpGet("{userId}/{postId}/didUserLikeThePost"), Authorize(Roles = "User, Administrator")]
+    public async Task<ActionResult<UserLikedPostOut>> DidUserLikeThePost(Guid userId, Guid postId) {
+        UserLikedPostOut response = await _postService.DidUserLikedPost(userId, postId);
+
+        return response;
+    }
 }
 
