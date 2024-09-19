@@ -53,11 +53,24 @@ public sealed class PostService : IPostService {
         return new MessageOut($"Post with id {id} was successfully deleted.");
     }
 
+    public async Task<UserLikedPostOut> DidUserLikedPost(Guid userId, Guid postId) {
+        User user = await _databaseContext.Users.Include(user => user.Likes).FirstOrDefaultAsync(user => user.Id.Equals(userId));
+        if (user is null) throw new UserNotFoundException(userId);
+
+        Post post = await _databaseContext.Posts.FirstOrDefaultAsync(post => post.Id.Equals(postId));
+        if (post is null) throw new PostNotFoundException(postId);
+
+        Like like = user.Likes.FirstOrDefault(like => like.PostId.Equals(post.Id));
+        if (like is null) return new UserLikedPostOut(false);
+
+        return new UserLikedPostOut(true);
+    }
+
     public async Task<PostOut> Get(Guid id) {
-        Post post = await _databaseContext.Posts.Include(post => post.Likes).Include(post => post.Comments).FirstOrDefaultAsync(post => post.Id.Equals(id));
+        Post post = await _databaseContext.Posts.Include(post => post.Likes).Include(post => post.Comments).Include(post => post.User).FirstOrDefaultAsync(post => post.Id.Equals(id));
         if (post is null) throw new PostNotFoundException(id);
 
-        PostOut response = new PostOut(post.Id, post.Name, post.Description, post.PhotoUrl, post.Likes.Count, post.Comments.Count, post.Created, post.Updated);
+        PostOut response = new PostOut(post.Id, post.Name, post.Description, post.PhotoUrl, post.User.FirstName + ' ' + post.User.LastName, post.Likes.Count, post.Comments.Count, post.Created, post.Updated);
 
         return response;
     }
