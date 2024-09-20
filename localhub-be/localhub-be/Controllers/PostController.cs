@@ -29,10 +29,10 @@ public sealed class PostController : BaseController {
         return Ok(response);
     }
 
-    [HttpPost, Authorize(Roles = "Administrator")]
-    public async Task<ActionResult<PostOut>> CreatePost(PostIn request) {
+    [HttpPost("{userId}"), Authorize(Roles = "Administrator")]
+    public async Task<ActionResult<PostOut>> CreatePost(Guid userId, PostIn request) {
         ValidateModelState();
-        PostOut response = await _postService.Create(request);
+        PostOut response = await _postService.Create(userId, request);
 
         return Ok(response);
     }

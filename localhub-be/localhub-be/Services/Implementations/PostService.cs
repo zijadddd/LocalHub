@@ -17,21 +17,29 @@ public sealed class PostService : IPostService {
         _fileService = fileService;
     }
 
-    public async Task<PostOut> Create(PostIn request) {
+    public async Task<PostOut> Create(Guid userId, PostIn request) {
+        User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId));
+        if (user is null) throw new UserNotFoundException(userId);
+
         PictureOut pictureUrl = await _fileService.SaveFile(new PictureIn(request.Image));
 
         Post post = new Post {
             Name = request.Name,
             Description = request.Description,
-            PhotoUrl = pictureUrl.FilePath
+            PhotoUrl = pictureUrl.FilePath,
+            UserId = user.Id
         };
 
         _databaseContext.Posts.Add(post);
         await _databaseContext.SaveChangesAsync();
 
-        PostOut response = new PostOut(post.Id, post.Name, post.Description, post.PhotoUrl, 0, 0, post.Created, post.Updated);
+        PostOut response = new PostOut(post.Id, post.Name, post.Description, post.PhotoUrl, user.FirstName + ' ' + user.LastName, 0, 0, post.Created, post.Updated);
 
         return response;
+    }
+
+    public Task<PostOut> Create(PostIn request) {
+        throw new NotImplementedException();
     }
 
     public async Task<MessageOut> Delete(Guid id) {
