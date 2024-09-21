@@ -16,6 +16,7 @@ import { WhichAction } from '../../shared/models/which-action.model';
 })
 export class NavigationBarComponent implements OnInit {
   public userProfilePhoto: PictureOut = new PictureOut();
+  private authenticatedUserId: string;
 
   profileMenuOpen = false;
 
@@ -34,6 +35,10 @@ export class NavigationBarComponent implements OnInit {
         this.setUserProfilePhoto();
       }
     });
+
+    this.authenticatedUserId = this.authService.getNameIdentifierFromToken(
+      localStorage.getItem('token')!
+    )!;
   }
 
   toggleProfileMenu() {
@@ -63,5 +68,9 @@ export class NavigationBarComponent implements OnInit {
   logoutUser() {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);
+  }
+
+  getAuthenticatedUserId() {
+    return this.authenticatedUserId;
   }
 }

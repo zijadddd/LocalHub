@@ -62,11 +62,14 @@ public sealed class CommentService : ICommentService {
     }
 
     public async Task<List<CommentOut>> GetAll(Guid postId) {
-        Post post = await _databaseContext.Posts.Include(post => post.Comments).FirstOrDefaultAsync(post => post.Id.Equals(postId));
-        if (post is null) throw new PostNotFoundException(postId);
+        List<Comment> comments = await _databaseContext.Comments.Include(comment => comment.User).Where(comment => comment.PostId.Equals(postId)).ToListAsync();
 
-        List<CommentOut> response = post.Comments.Select(comment => new CommentOut(
-            comment.Id, comment.Content, comment.UserId, comment.PostId, comment.Created, comment.Updated
+        List<CommentOut> response = comments.Select(comment => new CommentOut(
+            comment.Id, comment.Content, new UserOut(
+                comment.User.Id, comment.User.FirstName, comment.User.LastName, comment.User.BirthDate, comment.User.Address, comment.User.Region,
+                comment.User.PhoneNumber, comment.User.MembershipDate, comment.User.Created, comment.User.Updated, comment.User.Auth?.Email, 
+                comment.User.ProfilePhotoUrl
+            ), comment.PostId, comment.Created, comment.Updated
         )).ToList();
 
         if (response.IsNullOrEmpty()) throw new NoCommentsAvailableForPostException(postId);
@@ -75,7 +78,7 @@ public sealed class CommentService : ICommentService {
     }
 
     public async Task<CommentOut> Update(Guid commentId, CommentUpdateIn request) {
-        Comment comment = await _databaseContext.Comments.FirstOrDefaultAsync(comment => comment.Id.Equals(commentId));
+        Comment comment = await _databaseContext.Comments.Include(comment => comment.User).FirstOrDefaultAsync(comment => comment.Id.Equals(commentId));
         if (comment is null) throw new CommentNotFoundException(commentId);
 
         comment.Content = request.Content;
@@ -84,7 +87,12 @@ public sealed class CommentService : ICommentService {
         _databaseContext.Comments.Update(comment);
         await _databaseContext.SaveChangesAsync();
 
-        CommentOut response = new CommentOut(comment.Id, comment.Content, comment.UserId, comment.PostId, comment.Created, comment.Updated);
+        CommentOut response = new CommentOut(
+                comment.Id, comment.Content, new UserOut(
+                comment.User.Id, comment.User.FirstName, comment.User.LastName, comment.User.BirthDate, comment.User.Address, comment.User.Region,
+                comment.User.PhoneNumber, comment.User.MembershipDate, comment.User.Created, comment.User.Updated, comment.User.Auth?.Email,
+                comment.User.ProfilePhotoUrl
+            ), comment.PostId, comment.Created, comment.Updated);
 
         return response;
     }

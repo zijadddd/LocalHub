@@ -4,6 +4,7 @@ import { MainPageComponent } from './components/main-page/main-page.component';
 //import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { AuthGuard } from './shared/core/auth-guard.core';
 import { ProfilePageComponent } from './components/profile-page/profile-page.component';
+import { PostPageComponent } from './components/post-page/post-page.component';
 
 export const routes: Routes = [
   {
@@ -12,8 +13,13 @@ export const routes: Routes = [
   },
   { path: '', component: MainPageComponent, canActivate: [AuthGuard] },
   {
-    path: 'profilePage',
+    path: 'profilePage/:id',
     component: ProfilePageComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'postPage/:id',
+    component: PostPageComponent,
     canActivate: [AuthGuard],
   },
   //{ path: '**', component: PageNotFoundComponent, canActivate: [AuthGuard] },

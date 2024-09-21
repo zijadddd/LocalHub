@@ -7,6 +7,7 @@ import { PostService } from '../../shared/services/post.service';
 import { LikeAndCommentCountOut } from '../../shared/models/like-comment.model';
 import { PictureIn } from '../../shared/models/picture.model';
 import { CommunicationService } from '../../shared/services/communication.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-profile-page',
@@ -20,7 +21,8 @@ export class ProfilePageComponent implements OnInit {
     private readonly userService: UserService,
     private readonly authService: AuthenticationService,
     private readonly communicationService: CommunicationService,
-    private readonly postService: PostService
+    private readonly postService: PostService,
+    private readonly route: ActivatedRoute
   ) {}
 
   public user: UserOut;
@@ -28,33 +30,33 @@ export class ProfilePageComponent implements OnInit {
   public likeAndCommentCount: LikeAndCommentCountOut;
 
   ngOnInit(): void {
-    this.userService
-      .getUser(
-        this.authService.getNameIdentifierFromToken(
+    const userId = this.route.snapshot.paramMap.get('id')!;
+
+    this.userService.getUser(userId).subscribe((response: UserOut) => {
+      this.user = response;
+
+      this.userService.getUserRole(this.user.id).subscribe((response) => {
+        const authenticatedUserRole = this.authService.getUserRoleFromToken(
           localStorage.getItem('token')!
-        )!
-      )
-      .subscribe((response: UserOut) => {
-        this.user = response;
+        );
+        if (authenticatedUserRole === 'Administrator')
+          this.showBanAndDeleteBtn = true;
 
-        this.userService.getUserRole(this.user.id).subscribe((response) => {
-          if (response.name === 'Administrator')
-            this.showBanAndDeleteBtn = true;
-          if (
-            this.authService.getNameIdentifierFromToken(
-              localStorage.getItem('token')!
-            ) === this.user.id
-          ) {
-            this.showBanAndDeleteBtn = false;
-          }
-        });
-
-        this.postService
-          .getUserLikeAndCommentCount(this.user.id)
-          .subscribe((response) => {
-            this.likeAndCommentCount = response;
-          });
+        const authenticatedUserNameIdentifier =
+          this.authService.getNameIdentifierFromToken(
+            localStorage.getItem('token')!
+          );
+        if (authenticatedUserNameIdentifier === this.user.id) {
+          this.showBanAndDeleteBtn = false;
+        }
       });
+
+      this.postService
+        .getUserLikeAndCommentCount(this.user.id)
+        .subscribe((response) => {
+          this.likeAndCommentCount = response;
+        });
+    });
   }
 
   getUserAge(): number {

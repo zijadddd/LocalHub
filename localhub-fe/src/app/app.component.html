@@ -1,4 +1,7 @@
 <div class="w-screen h-screen overflow-auto">
   <app-navigation-bar *ngIf="isUserLoggedIn()"></app-navigation-bar>
   <router-outlet></router-outlet>
+
+  <app-modal></app-modal>
+  <app-alert-popup></app-alert-popup>
 </div>

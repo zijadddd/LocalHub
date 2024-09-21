@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AuthenticationPageComponent } from './components/authentication-page/authentication-page.component';
-import { BrowserModule } from '@angular/platform-browser';
 import { AuthenticationService } from './shared/services/authentication.service';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { NgIf } from '@angular/common';
+import { MainPageComponent } from './components/main-page/main-page.component';
+import { ModalComponent } from './components/modal/modal.component';
+import { AlertPopupComponent } from './components/alert-popup/alert-popup.component';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +16,9 @@ import { NgIf } from '@angular/common';
     AuthenticationPageComponent,
     NavigationBarComponent,
     NgIf,
+    MainPageComponent,
+    ModalComponent,
+    AlertPopupComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',

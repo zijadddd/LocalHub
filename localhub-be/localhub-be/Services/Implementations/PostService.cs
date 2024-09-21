@@ -84,11 +84,11 @@ public sealed class PostService : IPostService {
     }
 
     public async Task<List<PostOut>> GetAll() {
-        List<Post> posts = await _databaseContext.Posts.Include(post => post.Likes).Include(post => post.Comments).ToListAsync();
+        List<Post> posts = await _databaseContext.Posts.Include(post => post.Likes).Include(post => post.Comments).Include(post => post.User).ToListAsync();
         if (posts.IsNullOrEmpty()) throw new NoPostsAvailableException();
 
         List<PostOut> response = posts.Select(post => new PostOut(
-            post.Id, post.Name, post.Description, post.PhotoUrl, post.Likes.Count, post.Comments.Count, post.Created, post.Updated
+            post.Id, post.Name, post.Description, post.PhotoUrl, post.User.FirstName + ' ' + post.User.LastName, post.Likes.Count, post.Comments.Count, post.Created, post.Updated
         )).ToList();
 
         return response;
@@ -110,17 +110,29 @@ public sealed class PostService : IPostService {
         Post post = await _databaseContext.Posts.Include(post => post.Likes).FirstOrDefaultAsync(post => post.Id.Equals(postId));
         if (post is null) throw new PostNotFoundException(postId);
 
-        Like like = new Like { UserId = userId, PostId = postId };
-        _databaseContext.Likes.Add(like);
+        Like like = await _databaseContext.Likes.FirstOrDefaultAsync(like => like.UserId.Equals(userId) && like.PostId.Equals(postId));
+
+        if (like is null) {
+            like = new Like { UserId = userId, PostId = postId };
+
+            _databaseContext.Likes.Add(like);
+            await _databaseContext.SaveChangesAsync();
+
+            LikeOut responseIfNotLiked = new LikeOut(post.Likes.Count, true);
+
+            return responseIfNotLiked;
+        }
+
+        _databaseContext.Likes.Remove(like);
         await _databaseContext.SaveChangesAsync();
 
-        LikeOut response = new LikeOut(post.Likes.Count + 1);
+        LikeOut responseIfLiked = new LikeOut(post.Likes.Count, false);
 
-        return response;
+        return responseIfLiked;
     }
 
     public async Task<PostOut> Update(Guid id, PostIn request) {
-        Post post = await _databaseContext.Posts.Include(post => post.Likes.Count).Include(post => post.Comments).FirstOrDefaultAsync(post => post.Id.Equals(id));
+        Post post = await _databaseContext.Posts.Include(post => post.Likes.Count).Include(post => post.Comments).Include(post => post.User).FirstOrDefaultAsync(post => post.Id.Equals(id));
         if (post is null) throw new PostNotFoundException(id);
 
         post.Name = request.Name;
@@ -150,7 +162,7 @@ public sealed class PostService : IPostService {
         _databaseContext.Posts.Update(post);
         await _databaseContext.SaveChangesAsync();
 
-        PostOut response = new PostOut(post.Id, post.Name, post.Description, post.PhotoUrl, post.Likes.Count, post.Comments.Count, post.Created, post.Updated);
+        PostOut response = new PostOut(post.Id, post.Name, post.Description, post.PhotoUrl, post.User.FirstName + ' ' + post.User.LastName, post.Likes.Count, post.Comments.Count, post.Created, post.Updated);
 
         return response;
     }

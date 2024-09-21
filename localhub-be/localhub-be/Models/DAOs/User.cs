@@ -12,6 +12,7 @@ public sealed class User {
     public DateTime Updated { get; set; }  
     public Auth? Auth { get; set; }
     public string? ProfilePhotoUrl { get; set; }
+    public ICollection<Post> Posts { get; set; }
     public List<Comment> Comments { get; } = [];
     public List<Like> Likes { get; } = [];
 }

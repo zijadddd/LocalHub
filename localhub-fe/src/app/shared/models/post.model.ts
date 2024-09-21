@@ -3,6 +3,7 @@ export class PostOut {
   name: string;
   description: string;
   imageUrl: string;
+  userName: string;
   likes: number;
   comments: number;
   created: string;
