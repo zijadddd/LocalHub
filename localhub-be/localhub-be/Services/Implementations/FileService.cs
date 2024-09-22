@@ -53,7 +53,7 @@ public sealed class FileService : IFileService {
         var contentPath = _environment.ContentRootPath;
         var path = Path.Combine(contentPath, $"Uploads", imageName);
 
-        if (!File.Exists(path)) throw new FileNotFoundException($"Invalid file path");
+        if (!File.Exists(path)) throw new FileNotFoundException($"Invalid file path.");
 
         File.Delete(path);
         
