@@ -58,7 +58,7 @@ public sealed class CommentService : ICommentService {
         _databaseContext.Comments.Remove(comment);
         await _databaseContext.SaveChangesAsync();
 
-        return new MessageOut($"Comment with id {commentId} was successfully deleted.");
+        return new MessageOut($"Your comment has been successfully deleted.");
     }
 
     public async Task<List<CommentOut>> GetAll(Guid postId) {
