@@ -216,6 +216,7 @@ public sealed class UserService : IUserService {
         User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id.Equals(id));
         if (user is null) throw new UserNotFoundException(id);
 
+        if (!user.ProfilePhotoUrl.IsNullOrEmpty()) await DeleteProfilePhoto(user.Id);
         PictureOut response = await _fileService.SaveFile(request);
 
         user.ProfilePhotoUrl = response.FilePath;
