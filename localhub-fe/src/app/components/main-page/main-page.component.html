@@ -4,7 +4,7 @@
     class="w-2/4 block rounded overflow-hidden shadow-lg h-fit my-4"
     *ngFor="let post of posts"
   >
-    <div class="w-full bg-slate-200">
+    <div class="w-full bg-slate-200" *ngIf="post.imageUrl !== null">
       <img class="w-auto m-auto" [src]="post.imageUrl" alt="Image" />
     </div>
     <div class="px-6 py-4">

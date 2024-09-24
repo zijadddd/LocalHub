@@ -1,7 +1,7 @@
 <div
   class="w-2/4 m-auto block rounded overflow-hidden shadow-lg h-fit my-4 mt-20"
 >
-  <div class="w-full bg-slate-200">
+  <div class="w-full bg-slate-200" *ngIf="post.imageUrl !== null">
     <img
       class="w-auto m-auto pointer-events-none"
       [src]="post.imageUrl"
