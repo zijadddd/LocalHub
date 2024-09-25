@@ -1,4 +1,4 @@
-<nav class="fixed bg-white w-full z-20">
+<nav class="fixed bg-white dark:bg-gray-800 w-full z-20">
   <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
     <div class="relative flex h-16 items-center justify-between">
       <div
@@ -13,7 +13,7 @@
           <div class="flex space-x-4 h-full items-center">
             <a
               href="#"
-              class="rounded px-3 py-2 text-sm font-medium hover:bg-purple-500 hover:text-white"
+              class="rounded px-3 py-2 text-sm font-medium hover:bg-purple-500 hover:text-white dark:hover:bg-purple-700 dark:text-white"
               *ngIf="userProfilePhoto"
               >Dashboard</a
             >
@@ -24,9 +24,41 @@
         class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
       >
         <!-- Profile dropdown -->
-        <div class="relative ml-3">
+        <div class="relative ml-3 flex gap-5">
+          <button (click)="toggleTheme()">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6 stroke-gray-900 dark:stroke-gray-200 transition-colors hover:stroke-purple-400"
+              [ngClass]="{ hidden: !isDarkMode }"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
+              />
+            </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6 stroke-gray-900 dark:stroke-gray-200 transition-colors hover:stroke-purple-400"
+              [ngClass]="{ hidden: isDarkMode }"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z"
+              />
+            </svg>
+          </button>
           <button
-            class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-purple-500"
+            class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-purple-500 dark:bg-gray-700"
             (click)="toggleProfileMenu()"
           >
             <span class="sr-only">Open user menu</span>
@@ -38,23 +70,23 @@
           </button>
           <div
             *ngIf="profileMenuOpen"
-            class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5"
+            class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white dark:bg-gray-800 py-1 shadow-lg ring-1 ring-black ring-opacity-5"
           >
             <a
               [routerLink]="['/profilePage', getAuthenticatedUserId()]"
-              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
             >
               Your Profile
             </a>
             <a
               href="#"
-              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
             >
               Settings
             </a>
             <a
               href="#"
-              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
               (click)="logoutUser()"
             >
               Sign out

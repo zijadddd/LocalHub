@@ -1,11 +1,18 @@
 <div
-  class="px-6 py-4 mx-2 my-4 rounded text-lg flex items-center mx-auto max-w-lg absolute top-0 left-1/2 -translate-x-1/2 z-50"
-  [ngClass]="{ 'bg-red-200': isWarning, 'bg-green-200': !isWarning }"
+  *ngIf="isShowed"
+  class="px-6 py-4 mx-2 my-4 rounded text-lg flex items-center mx-auto max-w-lg absolute top-0 left-1/2 -translate-x-1/2 z-50 block"
+  [ngClass]="{
+    'bg-red-200': alert.isWarning,
+    'bg-green-200': !alert.isWarning,
+  }"
 >
   <svg
     viewBox="0 0 24 24"
     class="w-5 h-5 sm:w-5 sm:h-5 mr-3"
-    [ngClass]="{ 'text-red-600': isWarning, 'text-green-600': !isWarning }"
+    [ngClass]="{
+      'text-red-600': alert.isWarning,
+      'text-green-600': !alert.isWarning,
+    }"
   >
     <path
       fill="currentColor"
@@ -14,7 +21,10 @@
   </svg>
   <span
     class="text-base"
-    [ngClass]="{ 'text-red-800': isWarning, 'text-green-800': !isWarning }"
-    >Your account has been saved.</span
+    [ngClass]="{
+      'text-red-800': alert.isWarning,
+      'text-green-800': !alert.isWarning
+    }"
+    >{{ alert.message }}</span
   >
 </div>
