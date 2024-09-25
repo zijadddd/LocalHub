@@ -4,6 +4,7 @@ import { CommentIn, CommentOut } from '../models/comment.model';
 import { Observable } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
 import { CommentApi } from '../api-constants/comment-api.costant';
+import { MessageOut } from '../models/message-out.model';
 
 @Injectable({
   providedIn: 'root',
@@ -42,8 +43,8 @@ export class CommentService {
     );
   }
 
-  deleteComment(commentId: string): Observable<CommentOut> {
-    return this.httpClient.delete<CommentOut>(
+  deleteComment(commentId: string): Observable<MessageOut> {
+    return this.httpClient.delete<MessageOut>(
       CommentApi.DELETE_COMMENT.replace('#', commentId),
       { headers: this.getHeaders() }
     );
