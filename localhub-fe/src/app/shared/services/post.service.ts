@@ -64,4 +64,12 @@ export class PostService {
       { headers: this.getHeaders() }
     );
   }
+
+  createPost(userId: string, post: FormData): Observable<PostOut> {
+    return this.httpClient.post<PostOut>(
+      PostApi.CREATE_POST.replace('#', userId),
+      post,
+      { headers: this.getHeaders() }
+    );
+  }
 }

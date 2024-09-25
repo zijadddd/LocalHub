@@ -5,6 +5,7 @@ import { MainPageComponent } from './components/main-page/main-page.component';
 import { AuthGuard } from './shared/core/auth-guard.core';
 import { ProfilePageComponent } from './components/profile-page/profile-page.component';
 import { PostPageComponent } from './components/post-page/post-page.component';
+import { AddPostPageComponent } from './components/add-post-page/add-post-page.component';
 
 export const routes: Routes = [
   {
@@ -20,6 +21,11 @@ export const routes: Routes = [
   {
     path: 'postPage/:id',
     component: PostPageComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'addPost',
+    component: AddPostPageComponent,
     canActivate: [AuthGuard],
   },
   //{ path: '**', component: PageNotFoundComponent, canActivate: [AuthGuard] },

@@ -1,0 +1,79 @@
+<div class="w-3/4 m-auto flex justify-center flex-col items-center mt-20">
+  <h1 class="text-center font-bold text-gray-200">Create new post</h1>
+  <form
+    [formGroup]="postForm"
+    (ngSubmit)="onSubmit()"
+    class="w-full max-w-lg mx-auto bg-white dark:bg-gray-800 p-6 rounded shadow-md space-y-4 mt-5"
+  >
+    <div class="flex flex-col">
+      <label
+        for="name"
+        class="mb-2 text-sm font-bold text-gray-700 dark:text-gray-300"
+        >Name</label
+      >
+      <input
+        formControlName="name"
+        type="text"
+        id="name"
+        required
+        class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent"
+        placeholder="Enter Name"
+      />
+      <div
+        *ngIf="postForm.get('name')?.invalid && postForm.get('name')?.touched"
+        class="text-red-500 text-sm"
+      >
+        Name is required.
+      </div>
+    </div>
+
+    <div class="flex flex-col">
+      <label
+        for="description"
+        class="mb-2 text-sm font-bold text-gray-700 dark:text-gray-300"
+        >Description</label
+      >
+      <textarea
+        formControlName="description"
+        id="description"
+        required
+        class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent"
+        placeholder="Enter Description"
+      ></textarea>
+      <div
+        *ngIf="
+          postForm.get('description')?.invalid &&
+          postForm.get('description')?.touched
+        "
+        class="text-red-500 text-sm"
+      >
+        Description is required.
+      </div>
+    </div>
+
+    <div class="flex flex-col">
+      <label
+        for="image"
+        class="mb-2 text-sm font-bold text-gray-700 dark:text-gray-300"
+        >Picture</label
+      >
+      <input
+        type="file"
+        id="image"
+        (change)="onFileChange($event)"
+        accept="image/*"
+        class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      />
+    </div>
+
+    <div class="flex justify-end">
+      <button
+        type="submit"
+        [disabled]="postForm.invalid"
+        class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded cursor-pointer"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</div>
