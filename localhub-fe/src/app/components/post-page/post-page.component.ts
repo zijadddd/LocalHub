@@ -11,6 +11,8 @@ import { Modal } from '../../shared/models/modal.model';
 import { CommunicationService } from '../../shared/services/communication.service';
 import { Title } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { WhichAction } from '../../shared/models/which-action.model';
+import { Alert } from '../../shared/models/alert.model';
 
 @Component({
   selector: 'app-post-page',
@@ -21,7 +23,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class PostPageComponent implements OnInit {
   public post: PostOut;
-  public comments: CommentOut[];
+  public comments: CommentOut[] = [];
   public commentDropDownIsOpened: Map<string, boolean> = new Map<
     string,
     boolean
@@ -76,13 +78,13 @@ export class PostPageComponent implements OnInit {
             ? this.dateTimeFormatter(comment.updated)
             : '';
         this.commentDropDownIsOpened.set(comment.id, false);
-        this.editCommentInputs.push({ isShowed: false });
+        this.editCommentInputs.push({ isShowed: false, value: '' });
         return comment;
       });
     });
 
     this.communicationService.data$.subscribe((response) => {
-      if (response == true) this.deleteComment(this.commentIdForDeleting);
+      if (response.data == true) this.deleteComment(this.commentIdForDeleting);
     });
   }
 
@@ -135,13 +137,20 @@ export class PostPageComponent implements OnInit {
     deleteModal.isWarning = true;
     deleteModal.isShowed = true;
 
-    this.communicationService.openModal(deleteModal);
+    this.communicationService.openModal(WhichAction.OPEN_MODAL, deleteModal);
     this.commentIdForDeleting = id;
   }
 
   deleteComment(id: string) {
     this.commentService.deleteComment(id).subscribe((response) => {
       this.comments = this.comments.filter((comment) => comment.id !== id);
+      const alert: Alert = new Alert();
+      alert.isWarning = false;
+      alert.message = response.message;
+      this.communicationService.showAlertPopup(
+        WhichAction.SHOW_ALERT_POPUP,
+        alert
+      );
     });
   }
 
@@ -152,6 +161,9 @@ export class PostPageComponent implements OnInit {
     this.editCommentInputs[editCommentInputId].isShowed =
       !this.editCommentInputs[editCommentInputId].isShowed;
 
+    this.editCommentInputs[editCommentInputId].value =
+      this.comments[editCommentInputId].content;
+
     if (
       this.commentDropDownIsOpened.get(this.comments[editCommentInputId].id)
     ) {
@@ -159,10 +171,10 @@ export class PostPageComponent implements OnInit {
     }
   }
 
-  editComment(commentId: string) {
+  editComment(commentId: string, index: number) {
     const commentRequest: CommentIn = new CommentIn();
     const comment = this.comments.find((comment) => comment.id === commentId)!;
-    commentRequest.content = comment?.content!;
+    commentRequest.content = this.editCommentInputs[index].value;
 
     this.commentService
       .editComment(commentId, commentRequest)
