@@ -21,14 +21,16 @@ public sealed class PostService : IPostService {
         User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId));
         if (user is null) throw new UserNotFoundException(userId);
 
-        PictureOut pictureUrl = await _fileService.SaveFile(new PictureIn(request.Image));
-
         Post post = new Post {
             Name = request.Name,
             Description = request.Description,
-            PhotoUrl = pictureUrl.FilePath,
             UserId = user.Id
         };
+
+        if (request.Image is not null) {
+            PictureOut pictureUrl = await _fileService.SaveFile(new PictureIn(request.Image));
+            post.PhotoUrl = pictureUrl.FilePath;
+        }
 
         _databaseContext.Posts.Add(post);
         await _databaseContext.SaveChangesAsync();
