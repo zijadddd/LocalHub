@@ -5,4 +5,5 @@ export class UserApi {
   public static GET_USER_ROLE = 'https://localhost:7202/api/User/#/getUserRole';
   public static CHANGE_PROFILE_PICTURE =
     'https://localhost:7202/api/User/#/updateProfilePhoto';
+  public static GET_ALL_USERS = 'https://localhost:7202/api/User';
 }

@@ -55,4 +55,10 @@ export class UserService {
       { headers: this.getHeaders() }
     );
   }
+
+  getAllUsers(): Observable<UserOut[]> {
+    return this.httpClient.get<UserOut[]>(UserApi.GET_ALL_USERS, {
+      headers: this.getHeaders(),
+    });
+  }
 }
