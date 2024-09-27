@@ -6,6 +6,7 @@ import { AuthGuard } from './shared/core/auth-guard.core';
 import { ProfilePageComponent } from './components/profile-page/profile-page.component';
 import { PostPageComponent } from './components/post-page/post-page.component';
 import { AddPostPageComponent } from './components/add-post-page/add-post-page.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 export const routes: Routes = [
   {
@@ -26,6 +27,11 @@ export const routes: Routes = [
   {
     path: 'addPost',
     component: AddPostPageComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
     canActivate: [AuthGuard],
   },
   //{ path: '**', component: PageNotFoundComponent, canActivate: [AuthGuard] },
