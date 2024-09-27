@@ -27,6 +27,7 @@ export class MainPageComponent implements OnInit {
   public posts: PostOut[] = [];
   public didUserLikePost: Record<string, UserLikedPostOut> = {};
   public authenticatedUserId: string;
+  public authenticatedUserRole: string;
 
   constructor(
     private readonly titleService: Title,
@@ -46,6 +47,10 @@ export class MainPageComponent implements OnInit {
             : '';
 
         this.authenticatedUserId = this.authService.getNameIdentifierFromToken(
+          localStorage.getItem('token')!
+        )!;
+
+        this.authenticatedUserRole = this.authService.getUserRoleFromToken(
           localStorage.getItem('token')!
         )!;
 

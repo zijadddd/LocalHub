@@ -83,6 +83,7 @@
   <a
     routerLink="/addPost"
     class="flex items-center justify-center w-12 h-12 bg-purple-500 rounded-full hover:bg-purple-400 cursor-pointer absolute bottom-10 left-10"
+    *ngIf="authenticatedUserRole == 'Administrator'"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
