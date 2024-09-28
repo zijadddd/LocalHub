@@ -86,14 +86,14 @@ export class NavigationBarComponent implements OnInit {
 
   toggleTheme() {
     const theme = this.toggleThemeService.getStoredTheme();
-    if (theme === AppTheme.LIGHT) {
-      this.toggleThemeService.setDarkTheme();
-      this.isDarkMode = false;
-    }
 
     if (theme === AppTheme.DARK) {
       this.toggleThemeService.setLightTheme();
-      this.isDarkMode = true;
+      this.isDarkMode = false;
+      return;
     }
+
+    this.toggleThemeService.setDarkTheme();
+    this.isDarkMode = true;
   }
 }
