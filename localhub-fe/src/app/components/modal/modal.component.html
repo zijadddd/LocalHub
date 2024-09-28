@@ -4,14 +4,14 @@
   *ngIf="modal.isShowed"
 >
   <div class="p-4 w-full max-w-2xl max-h-full">
-    <div class="relative bg-white rounded shadow bg-white">
+    <div class="relative bg-white dark:bg-gray-800 rounded shadow">
       <div class="flex items-center justify-between p-4 md:p-5 rounded-t">
-        <h3 class="text-xl font-semibold text-gray-900 dark:text-black">
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
           {{ modal.heading }}
         </h3>
         <button
           type="button"
-          class="text-gray-600 bg-transparent rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-400 dark:hover:text-black"
+          class="text-gray-600 dark:text-gray-400 bg-transparent rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-700 dark:hover:text-white"
           data-modal-hide="default-modal"
           (click)="toggleIsModalShowed()"
         >
@@ -36,20 +36,20 @@
       <div
         class="font-semibold p-4"
         [ngClass]="{
-          'bg-orange-100': modal.isWarning,
-          'text-red-600': modal.isWarning,
-          'bg-green-100': !modal.isWarning,
-          'text-green-600': !modal.isWarning
+          'bg-orange-100 dark:bg-orange-200': modal.isWarning,
+          'text-red-600 dark:text-red-900': modal.isWarning,
+          'bg-green-100 dark:bg-green-900': !modal.isWarning,
+          'text-green-600 dark:text-green-400': !modal.isWarning
         }"
       >
         {{ modal.content }}
       </div>
       <div class="flex items-center p-4 md:p-5 rounded-b">
         <button
-          class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded mr-2"
+          class="shadow focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded mr-2"
           [ngClass]="{
-            'bg-red-500': modal.isWarning,
-            'hover:bg-red-400': modal.isWarning
+            'bg-red-500 dark:bg-red-700': modal.isWarning,
+            'hover:bg-red-400 dark:hover:bg-red-600': modal.isWarning
           }"
           type="button"
           data-modal-hide="default-modal"
@@ -58,7 +58,7 @@
           I accept
         </button>
         <button
-          class="shadow bg-gray-500 hover:bg-gray-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded mr-2"
+          class="shadow bg-gray-500 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded mr-2"
           type="button"
           data-modal-hide="default-modal"
           (click)="toggleIsModalShowed()"
