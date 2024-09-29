@@ -1,6 +1,6 @@
-<div class="container p-4 mt-20 ml-5">
+<div class="p-5 mt-20">
   <table
-    class="table-auto border-collapse border border-gray-300 dark:border-gray-600 rounded"
+    class="table-auto border-collapse border border-gray-300 dark:border-gray-600"
   >
     <thead>
       <tr class="bg-gray-100 dark:bg-gray-700">
@@ -94,7 +94,7 @@
         <td
           class="border border-gray-300 dark:border-gray-600 px-4 py-2 dark:text-gray-300"
         >
-          {{ user.birthDate }}
+          {{ user.birthDate.substring(0, 10) }}
         </td>
         <td
           class="border border-gray-300 dark:border-gray-600 px-4 py-2 dark:text-gray-300"
@@ -114,17 +114,17 @@
         <td
           class="border border-gray-300 dark:border-gray-600 px-4 py-2 dark:text-gray-300"
         >
-          {{ user.membershipDate }}
+          {{ user.membershipDate.substring(0, 10) }}
         </td>
         <td
           class="border border-gray-300 dark:border-gray-600 px-4 py-2 dark:text-gray-300"
         >
-          {{ user.created }}
+          {{ dateTimeFormatter(user.created) }}
         </td>
         <td
           class="border border-gray-300 dark:border-gray-600 px-4 py-2 dark:text-gray-300"
         >
-          {{ user.updated }}
+          {{ dateTimeFormatter(user.updated) }}
         </td>
         <td
           class="border border-gray-300 dark:border-gray-600 px-4 py-2 dark:text-gray-300"
@@ -145,7 +145,7 @@
         >
           <div class="flex space-x-2">
             <button
-              class="p-2 bg-yellow-500 hover:bg-yellow-400 text-white rounded"
+              class="p-2 bg-orange-500 hover:bg-orange-400 text-white rounded"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
