@@ -36,7 +36,7 @@ public sealed class UserController : BaseController {
         return Ok(response);
     }
 
-    [HttpDelete, Authorize(Roles = "Administrator")]
+    [HttpDelete("{id}"), Authorize(Roles = "Administrator")]
     public async Task<ActionResult<MessageOut>> DeleteUser(Guid id) {
         MessageOut response = await _userService.Delete(id);
 
