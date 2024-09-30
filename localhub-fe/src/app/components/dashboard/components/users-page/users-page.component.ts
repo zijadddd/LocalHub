@@ -20,4 +20,16 @@ export class UsersPageComponent implements OnInit {
       this.users = response;
     });
   }
+  deleteUser(userId: string) {
+    this.userService.deleteUser(userId).subscribe((response) => {
+      this.users = this.users.filter((user) => user.id !== userId);
+      const alert: Alert = new Alert();
+      alert.isWarning = false;
+      alert.message = response.message;
+      this.communicationService.showAlertPopup(
+        WhichAction.SHOW_ALERT_POPUP,
+        alert
+      );
+    });
+  }
 }
