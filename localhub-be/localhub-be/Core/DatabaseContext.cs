@@ -15,6 +15,7 @@ public sealed class DatabaseContext : DbContext {
     public DbSet<Post> Posts { get; set; }
     public DbSet<Comment> Comments { get; set; }
     public DbSet<Like> Likes { get; set; }
+    public DbSet<SuspendInfo> SuspendInfos { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         Guid adminRoleId = Guid.NewGuid();

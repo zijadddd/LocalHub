@@ -21,4 +21,12 @@ public sealed class AuthController : BaseController {
 
         return Ok(response);
     }
+
+    [HttpPost("{userId}/banUser"), Authorize(Roles="Administrator")]
+    public async Task<ActionResult<MessageOut>> SuspendUser(Guid userId, SuspendIn request) {
+        ValidateModelState();
+        MessageOut response = await _authService.SuspendUser(userId, request);
+
+        return Ok(response);
+    }
 }
