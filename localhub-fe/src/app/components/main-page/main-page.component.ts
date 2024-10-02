@@ -46,14 +46,6 @@ export class MainPageComponent implements OnInit {
             ? this.dateTimeFormatter(post.updated)
             : '';
 
-        this.authenticatedUserId = this.authService.getNameIdentifierFromToken(
-          localStorage.getItem('token')!
-        )!;
-
-        this.authenticatedUserRole = this.authService.getUserRoleFromToken(
-          localStorage.getItem('token')!
-        )!;
-
         this.postService
           .didUserLikePost(this.authenticatedUserId, post.id)
           .subscribe((response) => {
@@ -62,6 +54,14 @@ export class MainPageComponent implements OnInit {
         return post;
       });
     });
+
+    this.authenticatedUserId = this.authService.getNameIdentifierFromToken(
+      localStorage.getItem('token')!
+    )!;
+
+    this.authenticatedUserRole = this.authService.getUserRoleFromToken(
+      localStorage.getItem('token')!
+    )!;
   }
 
   dateTimeFormatter(dateTime: string): string {
