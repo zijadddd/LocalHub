@@ -1,7 +1,6 @@
 ﻿namespace localhub_be.Models.DAOs;
 public sealed class Like {
     public Guid Id { get; set; }
-    public string? Content { get; set; }
     public Guid UserId { get; set; }
     public User User { get; set; } = null!;
     public Guid PostId { get; set; }
