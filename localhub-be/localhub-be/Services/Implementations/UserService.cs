@@ -81,7 +81,7 @@ public sealed class UserService : IUserService {
         User user = await _databaseContext.Users.Include(user => user.Auth).FirstOrDefaultAsync(user => user.Id.Equals(id));
         if (user is null) throw new UserNotFoundException(id);
 
-        await DeleteProfilePhoto(id);
+        if (user.ProfilePhotoUrl is not null) await DeleteProfilePhoto(id);
 
         _databaseContext.Remove(user);
         await _databaseContext.SaveChangesAsync();
