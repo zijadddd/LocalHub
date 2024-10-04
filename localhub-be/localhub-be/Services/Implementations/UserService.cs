@@ -78,7 +78,7 @@ public sealed class UserService : IUserService {
     }
 
     public async Task<MessageOut> Delete(Guid id) {
-        User user = await _databaseContext.Users.Include(user => user.Auth).FirstOrDefaultAsync(user => user.Id.Equals(id));
+        User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id.Equals(id));
         if (user is null) throw new UserNotFoundException(id);
 
         if (user.ProfilePhotoUrl is not null) await DeleteProfilePhoto(id);
