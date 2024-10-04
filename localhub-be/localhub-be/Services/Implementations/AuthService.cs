@@ -30,6 +30,13 @@ public sealed class AuthService : IAuthService {
         return new AuthOut(CreateTokenAsync(userAuthInfo));
     }
 
+    public async Task<SuspendOut> IsSuspended(Guid id) {
+        Auth? userAuthInfo = await _databaseContext.Auths.Include(uai => uai.SuspendInfo).FirstOrDefaultAsync(uai => uai.UserId.Equals(id));
+        if (userAuthInfo.SuspendInfo is not null) return new SuspendOut(userAuthInfo.SuspendInfo.Reason, true);
+
+        return new SuspendOut("", false);
+    }
+
     public async Task<MessageOut> SuspendUser(Guid id, SuspendIn request) {
         User user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.Id.Equals(id));
         Auth auth = await _databaseContext.Auths.Include(auth => auth.SuspendInfo).FirstOrDefaultAsync(auth => auth.UserId.Equals(id));

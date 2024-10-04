@@ -29,4 +29,11 @@ public sealed class AuthController : BaseController {
 
         return Ok(response);
     }
+
+    [HttpGet("{userId}/isSuspended"), Authorize(Roles="Administrator")]
+    public async Task<ActionResult<SuspendOut>> IsSuspended(Guid userId) {
+        SuspendOut response = await _authService.IsSuspended(userId);
+
+        return Ok(response);
+    }
 }
