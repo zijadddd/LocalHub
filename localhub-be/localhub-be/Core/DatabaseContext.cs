@@ -31,6 +31,11 @@ public sealed class DatabaseContext : DbContext {
 
 
         modelBuilder.Entity<Auth>().HasData(new Auth { Id = authId, Email = "admin@gmail.com", Password = "$2a$11$llwetYA6KMfLAjuEss9.fOxrLxq9BLJEpcZXVuI4y0.IK4iUnTLNa", RoleId = adminRoleId, UserId = userId });
+
+        modelBuilder.Entity<SuspendInfo>()
+            .HasOne(si => si.Auth)
+            .WithOne(a => a.SuspendInfo)
+            .HasForeignKey<SuspendInfo>(si => si.AuthId);
     }
 }
 
