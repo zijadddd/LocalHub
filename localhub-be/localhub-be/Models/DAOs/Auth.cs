@@ -5,7 +5,6 @@ public sealed class Auth {
     public string? Password { get; set; } 
     public DateTime Created { get; set; } = DateTime.Now;
     public DateTime Updated { get; set; } 
-    public Guid SuspendId { get; set; }
     public SuspendInfo? SuspendInfo { get; set; }
     public Guid RoleId { get; set; }
     public Role? Role { get; set; }
