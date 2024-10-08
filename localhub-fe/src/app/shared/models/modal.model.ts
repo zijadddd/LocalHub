@@ -3,4 +3,5 @@ export class Modal {
   content: string;
   isWarning: boolean;
   isShowed: boolean;
+  needInput: boolean;
 }
