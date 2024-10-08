@@ -6,6 +6,7 @@ import { PictureIn, PictureOut } from '../models/picture.model';
 import { AuthenticationService } from './authentication.service';
 import { UserOut } from '../models/user.model';
 import { RoleOut } from '../models/role.model';
+import { MessageOut } from '../models/message-out.model';
 
 @Injectable({
   providedIn: 'root',
@@ -60,5 +61,12 @@ export class UserService {
     return this.httpClient.get<UserOut[]>(UserApi.GET_ALL_USERS, {
       headers: this.getHeaders(),
     });
+  }
+
+  deleteUser(id: string): Observable<MessageOut> {
+    return this.httpClient.delete<MessageOut>(
+      UserApi.DELETE_USER.replace('#', id),
+      { headers: this.getHeaders() }
+    );
   }
 }
