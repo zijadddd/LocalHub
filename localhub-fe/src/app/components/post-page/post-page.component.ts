@@ -84,7 +84,8 @@ export class PostPageComponent implements OnInit {
     });
 
     this.communicationService.data$.subscribe((response) => {
-      if (response.data == true) this.deleteComment(this.commentIdForDeleting);
+      if (response.data[0] == true)
+        this.deleteComment(this.commentIdForDeleting);
     });
   }
 
@@ -136,6 +137,7 @@ export class PostPageComponent implements OnInit {
       'This action CANNOT be undone. This will permanently delete the comment.';
     deleteModal.isWarning = true;
     deleteModal.isShowed = true;
+    deleteModal.needInput = false;
 
     this.communicationService.openModal(WhichAction.OPEN_MODAL, deleteModal);
     this.commentIdForDeleting = id;
