@@ -44,12 +44,43 @@
       >
         {{ modal.content }}
       </div>
+      <div
+        class="flex items-center p-4 md:p-5 rounded-b"
+        *ngIf="modal.needInput"
+      >
+        <form [formGroup]="postForm">
+          <div class="flex flex-col">
+            <label
+              for="reason"
+              class="mb-2 text-sm font-bold text-gray-700 dark:text-gray-300"
+              >Reason</label
+            >
+            <input
+              formControlName="reason"
+              type="text"
+              id="reason"
+              required
+              class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent"
+              placeholder="Enter Reason"
+            />
+            <div
+              *ngIf="
+                postForm.get('reason')?.invalid &&
+                postForm.get('reason')?.touched
+              "
+              class="text-red-500 text-sm"
+            >
+              The reason needs to be between 6 and 255 characters long.
+            </div>
+          </div>
+        </form>
+      </div>
       <div class="flex items-center p-4 md:p-5 rounded-b">
         <button
           class="shadow focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded mr-2"
           [ngClass]="{
             'bg-red-500 dark:bg-red-700': modal.isWarning,
-            'hover:bg-red-400 dark:hover:bg-red-600': modal.isWarning
+            'hover:bg-red-400 dark:hover:bg-red-600': modal.isWarning,
           }"
           type="button"
           data-modal-hide="default-modal"
