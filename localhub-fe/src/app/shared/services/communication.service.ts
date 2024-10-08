@@ -20,7 +20,7 @@ export class CommunicationService {
     this.dataSource.next({ action: action, data });
   }
 
-  isModalConfirmed(action: string, data: boolean) {
+  isModalConfirmed(action: string, data: any) {
     this.dataSource.next({ action: action, data });
   }
 
