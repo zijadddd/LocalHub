@@ -16,6 +16,15 @@ export class AuthenticationService {
     private readonly router: Router
   ) {}
 
+  private getHeaders(): HttpHeaders {
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    return headers;
+  }
+
   authenticateUser(request: AuthIn): Observable<AuthOut> {
     return this.httpClient.post<AuthOut>(
       AuthenticationApi.AUTHENTICATION,
