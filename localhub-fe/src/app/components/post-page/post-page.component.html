@@ -1,91 +1,100 @@
 <div
-  class="w-2/4 m-auto block rounded overflow-hidden shadow-lg h-fit my-4 mt-20 dark:bg-gray-800"
+  class="w-2/4 m-auto block rounded-lg overflow-hidden shadow-lg h-fit my-4 mt-20 dark:bg-card-background"
 >
-  <div class="w-full bg-slate-800" *ngIf="post.imageUrl !== null">
+  <div
+    class="w-full dark:bg-primary-background-200"
+    *ngIf="post.imageUrl !== null"
+  >
     <img
       class="w-auto m-auto pointer-events-none"
       [src]="post.imageUrl"
       alt="Image"
     />
   </div>
-  <div class="px-6 py-4">
+  <div class="px-4 pt-2 mt-2 flex flex-col">
+    <div class="text-xs text-text-disabled" *ngIf="post.updated === ''">
+      Created by {{ post.userName }} at {{ post.created }}h
+    </div>
+    <div *ngIf="post.updated !== ''" class="text-xs text-text-disabled">
+      Updated by {{ post.userName }} at {{ post.userName }}h
+    </div>
+  </div>
+  <div class="px-4 py-2">
     <div class="font-bold text-xl mb-2 text-gray-900 dark:text-gray-100">
       {{ post.name }}
     </div>
-    <p class="text-gray-700 dark:text-gray-300 text-base">
+    <p class="text-gray-700 dark:text-text-disabled text-base w-fit">
       {{ post.description }}
     </p>
   </div>
-  <div class="px-6 pb-2">
-    <div
-      class="inline-block bg-gray-200 dark:bg-gray-600 rounded px-3 py-1 text-sm font-semibold text-gray-700 dark:text-gray-300 mr-2 mb-2 w-fit"
-    >
-      Posted by: {{ post.userName }}
-    </div>
-  </div>
-  <div class="px-6 pb-2 flex flex-col">
-    <div
-      class="inline-block bg-gray-200 dark:bg-gray-600 rounded px-3 py-1 text-sm font-semibold text-gray-700 dark:text-gray-300 mr-2 mb-2 w-fit"
-      *ngIf="post.updated === ''"
-    >
-      Created: {{ post.created }}
-    </div>
-    <div
-      *ngIf="post.updated !== ''"
-      class="inline-block bg-gray-200 dark:bg-gray-600 rounded px-3 py-1 text-sm font-semibold text-gray-700 dark:text-gray-300 mr-2 mb-2 w-fit"
-    >
-      Updated: {{ post.updated }}
-    </div>
-  </div>
-  <div class="px-6 flex">
+  <div class="px-4 py-2 flex">
     <button
-      class="bg-gray-200 dark:bg-gray-600 hover:bg-purple-400 hover:text-white rounded px-3 py-1 text-sm font-semibold text-gray-700 dark:text-gray-300 mr-2 mb-2 w-fit flex"
+      class="hover:bg-primary-light hover:text-text-primary rounded-md px-3 py-1 text-sm font-semibold mr-2 mb-2 w-fit flex items-center gap-y-1 dark:text-text-primary"
       [ngClass]="{
-        'bg-purple-500': didUserLikePost.isLiked,
-        'dark:bg-purple-500': didUserLikePost.isLiked,
-        'text-white': didUserLikePost.isLiked,
-        'dark:text-white': didUserLikePost.isLiked
-      }"
+      'bg-gray-200 text-gray-700 dark:bg-primary-background-100': !didUserLikePost.isLiked,
+      'bg-primary-dark text-white dark:bg-primary-dark': didUserLikePost.isLiked, 
+    }"
       (click)="likePost()"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
-        stroke-width="2"
-        stroke="currentColor"
+        stroke-width="1.5"
         class="size-5 mr-1"
+        fill="#ffffff"
+        *ngIf="didUserLikePost.isLiked"
       >
         <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z"
+          fill-rule="evenodd"
+          d="M15.03 9.684h3.965c.322 0 .64.08.925.232.286.153.532.374.717.645a2.109 2.109 0 0 1 .242 1.883l-2.36 7.201c-.288.814-.48 1.355-1.884 1.355-2.072 0-4.276-.677-6.157-1.256-.472-.145-.924-.284-1.348-.404h-.115V9.478a25.485 25.485 0 0 0 4.238-5.514 1.8 1.8 0 0 1 .901-.83 1.74 1.74 0 0 1 1.21-.048c.396.13.736.397.96.757.225.36.32.788.269 1.211l-1.562 4.63ZM4.177 10H7v8a2 2 0 1 1-4 0v-6.823C3 10.527 3.527 10 4.176 10Z"
+          clip-rule="evenodd"
         />
       </svg>
+
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        class="size-5 mr-1"
+        stroke="#ffffff"
+        *ngIf="!didUserLikePost.isLiked"
+      >
+        <path
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M7 11c.889-.086 1.416-.543 2.156-1.057a22.323 22.323 0 0 0 3.958-5.084 1.6 1.6 0 0 1 .582-.628 1.549 1.549 0 0 1 1.466-.087c.205.095.388.233.537.406a1.64 1.64 0 0 1 .384 1.279l-1.388 4.114M7 11H4v6.5A1.5 1.5 0 0 0 5.5 19v0A1.5 1.5 0 0 0 7 17.5V11Zm6.5-1h4.915c.286 0 .372.014.626.15.254.135.472.332.637.572a1.874 1.874 0 0 1 .215 1.673l-2.098 6.4C17.538 19.52 17.368 20 16.12 20c-2.303 0-4.79-.943-6.67-1.475"
+        />
+      </svg>
+
       Likes: {{ post.likes }}
     </button>
     <div
-      class="bg-gray-200 dark:bg-gray-600 rounded px-3 py-1 text-sm font-semibold text-gray-700 dark:text-gray-300 mr-2 mb-2 w-fit flex items-center justify-center"
+      class="bg-gray-200 dark:bg-primary-background-100 rounded-md px-3 py-1 text-sm font-semibold text-gray-700 dark:text-text-primary mr-2 mb-2 w-fit flex items-center gap-y-1"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         stroke-width="1.5"
-        stroke="currentColor"
         class="size-5 mr-1"
+        stroke="currentColor"
       >
         <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z"
+          fill-rule="evenodd"
+          d="M3 5.983C3 4.888 3.895 4 5 4h14c1.105 0 2 .888 2 1.983v8.923a1.992 1.992 0 0 1-2 1.983h-6.6l-2.867 2.7c-.955.899-2.533.228-2.533-1.08v-1.62H5c-1.105 0-2-.888-2-1.983V5.983Zm5.706 3.809a1 1 0 1 0-1.412 1.417 1 1 0 1 0 1.412-1.417Zm2.585.002a1 1 0 1 1 .003 1.414 1 1 0 0 1-.003-1.414Zm5.415-.002a1 1 0 1 0-1.412 1.417 1 1 0 1 0 1.412-1.417Z"
+          clip-rule="evenodd"
         />
       </svg>
+
       Comments: {{ post.comments }}
     </div>
   </div>
-  <section class="py-5 relative">
-    <div class="w-full max-w-7xl px-6 mx-auto">
+  <section class="px-2 py-2 mb-2 relative">
+    <div class="w-full max-w-7xl px-2 mx-auto">
       <div class="w-full flex-col justify-start items-start inline-flex">
         <div class="w-full flex-col justify-start items-start gap-5 flex">
           <div
@@ -94,7 +103,7 @@
           >
             <div class="w-full flex-col justify-start items-end gap-5 flex">
               <div
-                class="w-full p-6 bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 flex-col justify-start items-start gap-8 flex"
+                class="w-full p-6 bg-white dark:bg-primary-background-200 rounded-md border border-gray-200 dark:border-gray-700 flex-col justify-start items-start gap-8 flex"
               >
                 <div
                   class="w-full flex-col justify-center items-start gap-3.5 flex"
@@ -102,7 +111,7 @@
                   <div class="w-full justify-between items-center inline-flex">
                     <div class="justify-start items-center gap-2.5 flex">
                       <div
-                        class="w-10 h-10 bg-gray-300 dark:bg-gray-600 rounded-full justify-start items-start gap-2.5 flex"
+                        class="w-10 h-10 bg-gray-300 dark:bg-primary-background-200 rounded-full justify-start items-start gap-2.5 flex"
                       >
                         <img
                           class="rounded-full object-cover"
@@ -116,7 +125,7 @@
                         class="flex-col justify-start items-start gap-1 inline-flex"
                       >
                         <a
-                          class="text-gray-900 dark:text-gray-200 text-sm font-semibold leading-snug hover:text-purple-400 hover:underline"
+                          class="text-gray-900 dark:text-gray-200 text-sm font-semibold leading-snug hover:text-primary-dark hover:underline"
                           [routerLink]="['/profilePage', comment.user.id]"
                         >
                           {{ comment.user.firstName }}&nbsp;{{
@@ -124,13 +133,13 @@
                           }}
                         </a>
                         <h6
-                          class="text-gray-500 dark:text-gray-400 text-xs font-normal leading-5"
+                          class="text-gray-500 dark:text-text-disabled text-xs font-normal leading-5"
                           *ngIf="comment.updated === ''"
                         >
                           {{ comment.created }}
                         </h6>
                         <h6
-                          class="text-gray-500 dark:text-gray-400 text-xs font-normal leading-5"
+                          class="text-gray-500 dark:text-text-disabled text-xs font-normal leading-5"
                           *ngIf="comment.updated !== ''"
                         >
                           Updated: {{ comment.updated }}
@@ -170,7 +179,7 @@
                           </button>
                           <div
                             id="dropdown-1"
-                            class="absolute top-10 right-0 bg-slate-100 dark:bg-gray-700 divide-y divide-gray-100 dark:divide-gray-600 rounded shadow w-44 z-20"
+                            class="absolute top-10 right-0 bg-slate-100 dark:bg-primary-background-200 divide-y divide-gray-100 dark:divide-gray-600 rounded shadow w-44 z-20"
                             [ngClass]="{
                               open: commentDropDownIsOpened.get(comment.id),
                               hidden: !commentDropDownIsOpened.get(comment.id)
@@ -216,12 +225,12 @@
                   >
                     <input
                       type="text"
-                      class="w-full py-3 px-5 rounded border border-gray-300 focus:border-purple-500 bg-white dark:bg-gray-800 dark:border-gray-700 focus:outline-none text-gray-900 dark:text-gray-200 placeholder-gray-400 text-lg font-normal leading-relaxed"
+                      class="w-full py-3 px-5 rounded-md border border-gray-300 focus:border-primary-dark bg-white dark:bg-primary-background-100 dark:border-gray-700 focus:outline-none text-gray-900 dark:text-gray-200 placeholder-gray-400 text-lg font-normal leading-relaxed"
                       placeholder="Write comments here..."
                       [(ngModel)]="editCommentInputs[i].value"
                     />
                     <button
-                      class="absolute right-12 top-[18px]"
+                      class="absolute right-12 top-[16px] flex items-center"
                       (click)="editComment(comment.id, i)"
                     >
                       <svg
@@ -230,17 +239,18 @@
                         height="20"
                         viewBox="0 0 20 20"
                         fill="none"
-                        class="stroke-gray-900 dark:stroke-gray-200 transition-colors hover:stroke-purple-400"
+                        class="stroke-gray-900 dark:stroke-gray-200 transition-colors hover:stroke-primary-dark"
                       >
                         <path
-                          d="M11.3011 8.69906L8.17808 11.8221M8.62402 12.5909L8.79264 12.8821C10.3882 15.638 11.1859 17.016 12.2575 16.9068C13.3291 16.7977 13.8326 15.2871 14.8397 12.2661L16.2842 7.93238C17.2041 5.17273 17.6641 3.79291 16.9357 3.06455C16.2073 2.33619 14.8275 2.79613 12.0679 3.71601L7.73416 5.16058C4.71311 6.16759 3.20259 6.6711 3.09342 7.7427C2.98425 8.81431 4.36221 9.61207 7.11813 11.2076L7.40938 11.3762C7.79182 11.5976 7.98303 11.7083 8.13747 11.8628C8.29191 12.0172 8.40261 12.2084 8.62402 12.5909Z"
-                          stroke-width="2"
                           stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 11.917 9.724 16.5 19 7.5"
                         />
                       </svg>
                     </button>
                     <button
-                      class="absolute right-6 top-[16px]"
+                      class="absolute right-6 top-[16px] flex items-center"
                       (click)="toggleEditComment(i, $event)"
                     >
                       <svg
@@ -249,12 +259,13 @@
                         height="20"
                         viewBox="0 0 20 20"
                         fill="none"
-                        class="stroke-gray-900 dark:stroke-gray-200 transition-colors hover:stroke-red-400"
+                        class="stroke-gray-900 dark:stroke-gray-200 transition-colors hover:stroke-primary-warning"
                       >
                         <path
-                          stroke-width="2"
                           stroke-linecap="round"
-                          d="M6 18 18 6M6 6l12 12"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M6 18 17.94 6M18 18 6.06 6"
                         />
                       </svg>
                     </button>
@@ -264,11 +275,11 @@
             </div>
           </div>
           <div
-            class="w-full relative flex justify-between gap-2 focus-within:border-purple-500 focus-within-custom-stroke"
+            class="w-full relative flex justify-between gap-2 focus-within:border-primary-dark focus-within-custom-stroke"
           >
             <input
               type="text"
-              class="w-full py-3 px-5 rounded border border-gray-300 focus:border-purple-500 bg-white dark:bg-gray-800 dark:border-gray-700 focus:outline-none text-gray-900 dark:text-gray-200 placeholder-gray-400 text-lg font-normal leading-relaxed"
+              class="w-full py-3 px-5 rounded-md border border-gray-300 focus:border-primary-dark bg-white dark:bg-primary-background-100 dark:border-gray-700 focus:outline-none text-gray-900 dark:text-text-primary placeholder-gray-400 text-lg font-normal leading-relaxed"
               placeholder="Write comments here...."
               #comment
             />
@@ -282,7 +293,7 @@
                 height="20"
                 viewBox="0 0 20 20"
                 fill="none"
-                class="stroke-gray-900 dark:stroke-gray-200 transition-colors hover:stroke-purple-400"
+                class="stroke-gray-900 dark:stroke-gray-200 transition-colors hover:stroke-primary-dark"
               >
                 <path
                   d="M11.3011 8.69906L8.17808 11.8221M8.62402 12.5909L8.79264 12.8821C10.3882 15.638 11.1859 17.016 12.2575 16.9068C13.3291 16.7977 13.8326 15.2871 14.8397 12.2661L16.2842 7.93238C17.2041 5.17273 17.6641 3.79291 16.9357 3.06455C16.2073 2.33619 14.8275 2.79613 12.0679 3.71601L7.73416 5.16058C4.71311 6.16759 3.20259 6.6711 3.09342 7.7427C2.98425 8.81431 4.36221 9.61207 7.11813 11.2076L7.40938 11.3762C7.79182 11.5976 7.98303 11.7083 8.13747 11.8628C8.29191 12.0172 8.40261 12.2084 8.62402 12.5909Z"

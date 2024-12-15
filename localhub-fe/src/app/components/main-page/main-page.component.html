@@ -1,7 +1,7 @@
 <div class="w-3/4 m-auto flex justify-center flex-col items-center mt-20">
   <a
     [routerLink]="['/postPage', post.id]"
-    class="w-2/4 block rounded overflow-hidden shadow-lg h-fit my-4 dark:bg-gray-800"
+    class="w-2/4 block rounded-lg overflow-hidden shadow-lg h-fit my-4 dark:bg-card-background"
     *ngFor="let post of posts"
   >
     <div
@@ -10,79 +10,92 @@
     >
       <img class="w-auto m-auto" [src]="post.imageUrl" alt="Image" />
     </div>
-    <div class="px-6 py-4">
-      <div class="font-bold text-xl mb-2 text-gray-900 dark:text-gray-100">
+    <div class="px-4 pt-2 mt-2 flex flex-col">
+      <div class="text-xs text-text-disabled" *ngIf="post.updated === ''">
+        Created by {{ post.userName }} at {{ post.created }}h
+      </div>
+      <div *ngIf="post.updated !== ''" class="text-xs text-text-disabled">
+        Updated by {{ post.userName }} at {{ post.userName }}h
+      </div>
+    </div>
+    <div class="px-4 py-1 mb-2">
+      <div class="font-bold text-xl mb-1 text-gray-900 dark:text-gray-100">
         {{ post.name }}
       </div>
-      <p class="text-gray-700 dark:text-gray-300 text-base">
-        {{ post.description | truncate : 150 }}
+      <p class="text-gray-700 dark:text-text-disabled text-base">
+        {{ post.description | truncate : 50 }}
       </p>
     </div>
-    <div class="px-6 pb-2 flex flex-col">
-      <div
-        class="inline-block bg-gray-200 dark:bg-gray-600 rounded px-3 py-1 text-sm font-semibold text-gray-700 dark:text-gray-300 mr-2 mb-2 w-fit"
-        *ngIf="post.updated === ''"
-      >
-        Created: {{ post.created }}
-      </div>
-      <div
-        *ngIf="post.updated !== ''"
-        class="inline-block bg-gray-200 dark:bg-gray-600 rounded px-3 py-1 text-sm font-semibold text-gray-700 dark:text-gray-300 mr-2 mb-2 w-fit"
-      >
-        Updated: {{ post.updated }}
-      </div>
-    </div>
-    <div class="px-6 pb-2 flex">
+    <div class="px-4 pb-2 flex">
       <button
-        class="bg-gray-200 dark:bg-gray-600 hover:bg-purple-400 hover:text-white rounded px-3 py-1 text-sm font-semibold text-gray-700 dark:text-gray-300 mr-2 mb-2 w-fit flex"
+        class="hover:bg-primary-light hover:text-text-primary rounded-md px-3 py-1 text-sm font-semibold mr-2 mb-2 w-fit flex items-center gap-y-1 dark:text-text-primary"
         [ngClass]="{
-          'bg-purple-500': didUserLikePost[post.id].isLiked,
-          'dark:bg-purple-500': didUserLikePost[post.id].isLiked,
-          'text-white': didUserLikePost[post.id].isLiked,
-          'dark:text-white': didUserLikePost[post.id].isLiked
-        }"
+      'bg-gray-200 text-gray-700 dark:bg-primary-background-100': !didUserLikePost[post.id].isLiked,
+      'bg-primary-dark text-white dark:bg-primary-dark': didUserLikePost[post.id].isLiked, 
+    }"
         (click)="likePost(post.id, $event)"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
-          stroke-width="2"
-          stroke="currentColor"
+          stroke-width="1.5"
           class="size-5 mr-1"
+          fill="#ffffff"
+          *ngIf="didUserLikePost[post.id].isLiked"
         >
           <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z"
+            fill-rule="evenodd"
+            d="M15.03 9.684h3.965c.322 0 .64.08.925.232.286.153.532.374.717.645a2.109 2.109 0 0 1 .242 1.883l-2.36 7.201c-.288.814-.48 1.355-1.884 1.355-2.072 0-4.276-.677-6.157-1.256-.472-.145-.924-.284-1.348-.404h-.115V9.478a25.485 25.485 0 0 0 4.238-5.514 1.8 1.8 0 0 1 .901-.83 1.74 1.74 0 0 1 1.21-.048c.396.13.736.397.96.757.225.36.32.788.269 1.211l-1.562 4.63ZM4.177 10H7v8a2 2 0 1 1-4 0v-6.823C3 10.527 3.527 10 4.176 10Z"
+            clip-rule="evenodd"
           />
         </svg>
+
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          class="size-5 mr-1"
+          stroke="#ffffff"
+          *ngIf="!didUserLikePost[post.id].isLiked"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M7 11c.889-.086 1.416-.543 2.156-1.057a22.323 22.323 0 0 0 3.958-5.084 1.6 1.6 0 0 1 .582-.628 1.549 1.549 0 0 1 1.466-.087c.205.095.388.233.537.406a1.64 1.64 0 0 1 .384 1.279l-1.388 4.114M7 11H4v6.5A1.5 1.5 0 0 0 5.5 19v0A1.5 1.5 0 0 0 7 17.5V11Zm6.5-1h4.915c.286 0 .372.014.626.15.254.135.472.332.637.572a1.874 1.874 0 0 1 .215 1.673l-2.098 6.4C17.538 19.52 17.368 20 16.12 20c-2.303 0-4.79-.943-6.67-1.475"
+          />
+        </svg>
+
         Likes: {{ post.likes }}
       </button>
       <div
-        class="bg-gray-200 dark:bg-gray-600 rounded px-3 py-1 text-sm font-semibold text-gray-700 dark:text-gray-300 mr-2 mb-2 w-fit flex"
+        class="bg-gray-200 dark:bg-primary-background-100 rounded-md px-3 py-1 text-sm font-semibold text-gray-700 dark:text-text-primary mr-2 mb-2 w-fit flex items-center gap-y-1"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           stroke-width="1.5"
-          stroke="currentColor"
           class="size-5 mr-1"
+          stroke="currentColor"
         >
           <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z"
+            fill-rule="evenodd"
+            d="M3 5.983C3 4.888 3.895 4 5 4h14c1.105 0 2 .888 2 1.983v8.923a1.992 1.992 0 0 1-2 1.983h-6.6l-2.867 2.7c-.955.899-2.533.228-2.533-1.08v-1.62H5c-1.105 0-2-.888-2-1.983V5.983Zm5.706 3.809a1 1 0 1 0-1.412 1.417 1 1 0 1 0 1.412-1.417Zm2.585.002a1 1 0 1 1 .003 1.414 1 1 0 0 1-.003-1.414Zm5.415-.002a1 1 0 1 0-1.412 1.417 1 1 0 1 0 1.412-1.417Z"
+            clip-rule="evenodd"
           />
         </svg>
+
         Comments: {{ post.comments }}
       </div>
     </div>
   </a>
   <a
     routerLink="/addPost"
-    class="flex items-center justify-center w-12 h-12 bg-purple-500 rounded-full hover:bg-purple-400 cursor-pointer absolute bottom-10 left-10"
+    class="flex items-center justify-center w-12 h-12 bg-primary-dark rounded-md hover:bg-primary-light cursor-pointer absolute bottom-10 left-10"
     *ngIf="authenticatedUserRole === 'Administrator'"
   >
     <svg
@@ -96,7 +109,8 @@
       <path
         stroke-linecap="round"
         stroke-linejoin="round"
-        d="M12 4.5v15m7.5-7.5h-15"
+        stroke-width="2"
+        d="M5 12h14m-7 7V5"
       />
     </svg>
   </a>
